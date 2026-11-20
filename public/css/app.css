@@ -435,3 +435,12 @@ body.app .drawer .ok a{color:#a8d672}
 .ap-add.pulsa{animation:apPulsa .9s 2}
 @keyframes apPulsa{50%{transform:scale(1.04);box-shadow:0 0 0 8px #a8d67240}}
 #mt-fim{border:0}
+.ap-t.nao .ico{background:repeating-linear-gradient(135deg,#2a1846 0 10px,#241440 10px 20px);font-size:30px}
+.ap-t.nao .nm small{color:var(--lil)}
+.ap-t.nao.on{box-shadow:0 0 0 3px var(--lil),0 0 0 6px #120a24}
+.ap-t.nao.on .ck{background:var(--lil);border-color:var(--lil)}
+.ap-g1{grid-template-columns:repeat(3,1fr);margin-bottom:4px}
+.ap-next[hidden]{display:none!important}
+.ap-next{position:sticky;bottom:12px;z-index:3;box-shadow:0 10px 30px #000c,0 8px 22px #a8d67233!important}
+.ap-add #apAddMt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ap-add.off #apAddMt{font-size:16px}
