@@ -199,14 +199,14 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
   // ---------- Monte o seu (usa o copo animado do site) ----------
   let MO = { obs: '' }, copoCasa = null;
   function montar(base) {
-    sel.tam = '400'; sel.base = base || null; sel.meio = []; sel.comps = []; sel.prem = []; sel.cob = 'condensado'; qtd = 1; MO = { obs: '' };
+    sel.tam = '400'; sel.base = base || null; sel.meio = []; sel.comps = []; sel.prem = []; sel.cob = 'condensado'; qtd = 1; MO = { obs: '', feitos: new Set(base ? ['mt-tam', 'mt-base'] : []) };
     const pg = E('apMont');
     pg.innerHTML = `<button class="ap-ic ap-x" onclick="APP_.volta()" aria-label="Voltar">${IC.voltar}</button>
-<div class="ap-mtop" id="apMtop"><div class="ap-cupw" id="apCupw"><span class="ap-mpr" id="apMpr"></span></div><div class="ap-steps" id="apSteps"></div></div>
-<div class="sc" id="apMsc"><div style="height:392px"></div>
- <div class="ap-pd" style="margin-top:0;padding-top:18px"><h2>Monte seu açaí</h2><p>Escolha cada camada e veja os ingredientes caindo no copo. Complementos já estão no preço; recheios e cremes especiais são cobrados à parte. Toque em <b style="color:#fff">Ver por dentro</b> para ver as camadas.</p></div>
+<div class="ap-mtop" id="apMtop"><div class="ap-cupw" id="apCupw"><span class="ap-mpr" id="apMpr"></span></div><div class="ap-etapa"><span id="apEtTx"></span><i><b id="apProg"></b></i></div><div class="ap-steps" id="apSteps"></div></div>
+<div class="sc" id="apMsc"><div id="apEsp" style="height:430px"></div>
+ <div class="ap-pd" style="margin-top:0;padding-top:18px"><h2>Monte seu açaí</h2><p>São <b style="color:#fff">6 etapas</b>. A cada escolha a tela segue sozinha para a próxima, e você vê os ingredientes caindo no copo. Complementos já estão no preço; recheios e cremes especiais são cobrados à parte.</p></div>
  <div id="apMlist">${listaMontar()}</div>
- <div class="ap-obs"><label><b>Alguma observação?</b><small id="apOm">0/140</small></label><textarea maxlength="140" id="apObsM" placeholder="Ex.: pouco leite em pó, granola separada"></textarea></div></div>
+ <div class="ap-obs ap-etp" id="mt-fim"><label><b>Pronto! Alguma observação?</b><small id="apOm">0/140</small></label><textarea maxlength="140" id="apObsM" placeholder="Ex.: pouco leite em pó, granola separada"></textarea></div></div>
 <div class="ap-ft"><div class="ap-qt"><button data-q="-1" aria-label="Menos">−</button><b id="apMq">1</b><button data-q="1" aria-label="Mais">+</button></div><button class="ap-add" id="apAddM"><span id="apAddMt">ADICIONAR</span><span id="apMv"></span></button></div>`;
     // traz o copo animado do site para cá
     const copo = document.querySelector('.card.sticky .copo') || document.querySelector('.copo');
@@ -216,11 +216,13 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     sc.onscroll = () => {
       const k = Math.min(1, sc.scrollTop / 240);
       cw.style.setProperty('--ch', (340 - 168 * k) + 'px'); cw.style.setProperty('--cs', (1 - .46 * k).toFixed(3)); cw.classList.toggle('mini', k > .5);
-      const lim = mtop.offsetHeight + 70; let at = 'mt-tam';
-      ['mt-tam', 'mt-base', 'mt-meio', 'mt-comp', 'mt-prem', 'mt-cob'].forEach(id => { const el = E(id); if (el && el.getBoundingClientRect().top < lim) at = id; });
-      E('apSteps').querySelectorAll('button').forEach(b => { const on = b.dataset.s === at; if (on && !b.classList.contains('at')) b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); b.classList.toggle('at', on); });
+      const lim = mtop.getBoundingClientRect().bottom + 90; let at = 'mt-tam';
+      ETAPAS.forEach(([id]) => { const el = E(id); if (el && el.getBoundingClientRect().top < lim) at = id; });
+      if (sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 4) at = 'mt-fim';
+      marcaEtapa(at);
     };
     E('apMlist').onclick = e => {
+      const nx = e.target.closest('[data-nx]'); if (nx) { vibra(); avancar(nx.dataset.nx); return; }
       const t = e.target.closest('[data-o]'); if (!t) return;
       const [tipo, id] = t.dataset.o.split(':'), lim = TAMANHOS.find(x => x.id === sel.tam).lim;
       const tog = (arr, max) => { const k = arr.indexOf(id); if (k >= 0) { arr.splice(k, 1); return true; } if (max && arr.length >= max) { toast(`Máximo de ${max}: desmarque um para trocar`); vibra([10, 40, 10]); return false; } arr.push(id); return true; };
@@ -232,34 +234,57 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       else if (tipo === 'prem') tog(sel.prem);
       else if (tipo === 'cob') sel.cob = id;
       vibra(); atualizaMontar();
-      if (tipo === 'base' && eraSemSabor) setTimeout(() => irPara('mt-meio'), 450);
+      // segue sozinho quando a etapa fica completa
+      if (tipo === 'tam') avancar('mt-tam');
+      else if (tipo === 'base') avancar('mt-base');
+      else if (tipo === 'meio' && sel.meio.length >= 2) avancar('mt-meio');
+      else if (tipo === 'comp' && sel.comps.length >= TAMANHOS.find(x => x.id === sel.tam).lim) avancar('mt-comp');
+      else if (tipo === 'cob') avancar('mt-cob');
     };
     E('apSteps').onclick = e => { const b = e.target.closest('[data-s]'); if (b) irPara(b.dataset.s); };
     pg.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { qtd = Math.max(1, qtd + +b.dataset.q); vibra(); atualizaMontar(); });
     const ta = E('apObsM'); ta.oninput = () => { MO.obs = ta.value; E('apOm').textContent = ta.value.length + '/140'; };
     E('apAddM').onclick = addMontarApp;
-    atualizaMontar(); sc.scrollTop = 0; sc.onscroll();
+    atualizaMontar(); E('apEsp').style.height = mtop.offsetHeight + 'px'; sc.scrollTop = 0; sc.onscroll();
     pg.classList.add('on'); empilha('montar', () => { pg.classList.remove('on'); setTimeout(devolveCopo, 450); });
-    if (base) setTimeout(() => irPara('mt-meio'), 600);
+    if (base) setTimeout(() => irPara('mt-meio'), 650);
   }
   function devolveCopo() { const copo = document.querySelector('#apCupw .copo'); if (copo && copoCasa && !E('apMont').classList.contains('on')) { copoCasa.prepend(copo); try { render(); } catch (e) { } } }
-  function irPara(id) { const sc = E('apMsc'), el = E(id); if (!el) return; sc.scrollTo({ top: el.offsetTop - (172 + 52) + 6, behavior: 'smooth' }); }
+  const ETAPAS = [['mt-tam', 'Tamanho', 'Escolha o tamanho do copo'], ['mt-base', 'Sabor', 'Escolha o sabor do açaí'], ['mt-meio', 'Recheio', 'Recheio no meio do copo · opcional'], ['mt-comp', 'Complementos', 'Escolha seus complementos'], ['mt-prem', 'Extras', 'Cremes e extras · opcional'], ['mt-cob', 'Cobertura', 'Escolha a cobertura']];
+  function irPara(id) { const sc = E('apMsc'), el = E(id); if (!el) return; const topo = E('apMtop').offsetHeight - E('apCupw').offsetHeight + 172; const y = sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top; sc.scrollTo({ top: Math.max(0, y - topo + 2), behavior: 'smooth' }); }
+  function avancar(id) {
+    const k = ETAPAS.findIndex(e => e[0] === id);
+    ETAPAS.slice(0, k + 1).forEach(([e]) => { if (e !== 'mt-base' || sel.base) MO.feitos.add(e); }); atualizaMontar();
+    const prox = ETAPAS[k + 1] ? ETAPAS[k + 1][0] : 'mt-fim';
+    setTimeout(() => {
+      if (prox === 'mt-fim' && !sel.base) { irPara('mt-base'); return; }
+      irPara(prox);
+      if (prox === 'mt-fim') { const a = E('apAddM'); a.classList.remove('pulsa'); void a.offsetWidth; a.classList.add('pulsa'); }
+    }, 520);
+  }
+  function marcaEtapa(at) {
+    const k = ETAPAS.findIndex(e => e[0] === at);
+    E('apEtTx').innerHTML = at === 'mt-fim' ? '<em>Tudo pronto!</em> Revise e adicione à sacola 💜' : `<em>Etapa ${k + 1} de 6</em> · ${ETAPAS[k][2]}`;
+    document.querySelectorAll('#apMlist .ap-etp, #mt-fim').forEach(s => s.classList.toggle('foco', s.dataset.e === at || s.id === at));
+    E('apSteps').querySelectorAll('button').forEach(b => { const on = b.dataset.s === at; if (on && !b.classList.contains('at')) b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); b.classList.toggle('at', on); });
+  }
   const tile = (o, foto, ico, nome, subt) => `<button class="ap-t" data-o="${o}">${foto ? `<img src="${foto}" alt="" loading="lazy">` : `<span class="ico">${ico || '✨'}</span>`}<span class="ck"></span><span class="nm"><b>${esc(nome)}</b>${subt ? `<small>${subt}</small>` : ''}</span></button>`;
-  const cab = (id, t, s, badgeId) => `<div class="ap-sh" id="${id}"><div><b>${t}</b><small id="${id}-s">${s}</small></div><span class="ap-req" id="${badgeId}"></span></div>`;
+  const cab = (id, t, s, badgeId) => { const n = ETAPAS.findIndex(e => e[0] === id) + 1; return `<div class="ap-sh" id="${id}"><div><small class="ap-et">ETAPA ${n} DE 6</small><b><span class="ap-n">${n}</span>${t}</b><small id="${id}-s">${s}</small></div><span class="ap-req" id="${badgeId}"></span></div>`; };
+  const etp = (id, html) => { const k = ETAPAS.findIndex(e => e[0] === id), prox = ETAPAS[k + 1]; return `<section class="ap-etp" data-e="${id}">${html}<button class="ap-next" data-nx="${id}" id="nx-${id}">Continuar · ${prox ? (k + 2) + '. ' + prox[1] : 'Finalizar'} →</button></section>`; };
   function listaMontar() {
     const gruposC = [['fruta', '🍓 Frutas frescas'], ['fini', '🍬 Linha Fini'], [undefined, '✨ Crocantes e doces']];
-    return cab('mt-tam', 'Tamanho', 'Escolha 1 opção', 'bTam') +
-      `<div class="ap-tams">${TAMANHOS.map(t => `<button class="ap-tam" data-o="tam:${t.id}"><span class="cp">${copoMini(t.nome, t.h)}</span><span><b>${t.ap}</b><small>${t.nome} · até ${t.lim} compl.</small><em>${brl(t.preco)}</em></span></button>`).join('')}</div>` +
-      cab('mt-base', 'Sabor do açaí', 'Escolha 1 opção', 'bBase') +
-      `<div class="ap-grid">${BASES.map(b => tile('base:' + b.id, `img/sab/${b.id}.jpg`, b.ico, curto(b.nome), b.preco ? '+ ' + brl(b.preco) : '')).join('')}</div>` +
-      cab('mt-meio', 'Recheio no meio', 'Até 2 · cobrado à parte', 'bMeio') +
-      Object.entries(GRUPOS_MEIO).map(([g, gt]) => `<div class="ap-gt">${gt}</div><div class="ap-grid">` + MEIO.filter(m => m.id !== 'nenhum' && m.grupo === g).map(m => tile('meio:' + m.id, fotoMeio(m), m.ico, m.nome.replace('Fini ', ''), '+ ' + brl(m.preco))).join('') + '</div>').join('') +
-      cab('mt-comp', 'Complementos', '', 'bComp') +
-      gruposC.map(([g, gt]) => `<div class="ap-gt">${gt}</div><div class="ap-grid">` + COMPS.filter(c => c.grupo === g).map(c => tile('comp:' + c.id, fotoComp(c.id), c.ico, c.nome.replace('Fini ', ''), 'INCLUSO')).join('') + '</div>').join('') +
-      cab('mt-prem', 'Cremes e extras', 'Quantos quiser · cobrados à parte', 'bPrem') +
-      `<div class="ap-grid">${PREM.map(p => tile('prem:' + p.id, `img/extra/${p.id}.jpg`, p.ico, p.nome, '+ ' + brl(p.preco))).join('')}</div>` +
-      cab('mt-cob', 'Cobertura', 'Escolha 1 · inclusa', 'bCob') +
-      `<div class="ap-grid">${COBS.map(c => tile('cob:' + c.id, c.id !== 'nenhuma' ? `img/cob/${c.id}.jpg` : null, '🚫', c.nome, c.id === 'nenhuma' ? 'SÓ AÇAÍ' : 'INCLUSA')).join('')}</div>`;
+    return etp('mt-tam', cab('mt-tam', 'Tamanho', 'Escolha 1 opção', 'bTam') +
+      `<div class="ap-tams">${TAMANHOS.map(t => `<button class="ap-tam" data-o="tam:${t.id}"><span class="cp">${copoMini(t.nome, t.h)}</span><span><b>${t.ap}</b><small>${t.nome} · até ${t.lim} compl.</small><em>${brl(t.preco)}</em></span></button>`).join('')}</div>`) +
+      etp('mt-base', cab('mt-base', 'Sabor do açaí', 'Escolha 1 opção', 'bBase') +
+      `<div class="ap-grid">${BASES.map(b => tile('base:' + b.id, `img/sab/${b.id}.jpg`, b.ico, curto(b.nome), b.preco ? '+ ' + brl(b.preco) : '')).join('')}</div>`) +
+      etp('mt-meio', cab('mt-meio', 'Recheio no meio', 'Até 2 · cobrado à parte', 'bMeio') +
+      Object.entries(GRUPOS_MEIO).map(([g, gt]) => `<div class="ap-gt">${gt}</div><div class="ap-grid">` + MEIO.filter(m => m.id !== 'nenhum' && m.grupo === g).map(m => tile('meio:' + m.id, fotoMeio(m), m.ico, m.nome.replace('Fini ', ''), '+ ' + brl(m.preco))).join('') + '</div>').join('')) +
+      etp('mt-comp', cab('mt-comp', 'Complementos', '', 'bComp') +
+      gruposC.map(([g, gt]) => `<div class="ap-gt">${gt}</div><div class="ap-grid">` + COMPS.filter(c => c.grupo === g).map(c => tile('comp:' + c.id, fotoComp(c.id), c.ico, c.nome.replace('Fini ', ''), 'INCLUSO')).join('') + '</div>').join('')) +
+      etp('mt-prem', cab('mt-prem', 'Cremes e extras', 'Quantos quiser · cobrados à parte', 'bPrem') +
+      `<div class="ap-grid">${PREM.map(p => tile('prem:' + p.id, `img/extra/${p.id}.jpg`, p.ico, p.nome, '+ ' + brl(p.preco))).join('')}</div>`) +
+      etp('mt-cob', cab('mt-cob', 'Cobertura', 'Escolha 1 · inclusa', 'bCob') +
+      `<div class="ap-grid">${COBS.map(c => tile('cob:' + c.id, c.id !== 'nenhuma' ? `img/cob/${c.id}.jpg` : null, '🚫', c.nome, c.id === 'nenhuma' ? 'SÓ AÇAÍ' : 'INCLUSA')).join('')}</div>`);
   }
   function badge(id, cls, txt) { const b = E(id); if (b) { b.className = 'ap-req ' + cls; b.textContent = txt; } }
   function atualizaMontar() {
@@ -276,9 +301,12 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     badge('bMeio', nm ? 'cnt' : 'opc', nm ? nm + '/2' : 'OPCIONAL'); badge('bComp', nc ? (nc >= lim ? 'ok' : 'cnt') : 'opc', nc ? nc + '/' + lim : 'OPCIONAL');
     badge('bPrem', sel.prem.length ? 'cnt' : 'opc', sel.prem.length ? String(sel.prem.length) : 'OPCIONAL'); badge('bCob', 'ok', '✓');
     const cs = E('mt-comp-s'); if (cs) cs.textContent = `Até ${lim} no ${t.ap} · inclusos no preço`;
-    const passos = [['mt-tam', 'Tamanho', '✓', 'ok'], ['mt-base', 'Sabor', sel.base ? '✓' : '!', sel.base ? 'ok' : 'ob'], ['mt-meio', 'Recheio', nm || '–', nm ? 'ok' : ''], ['mt-comp', 'Complementos', nc + '/' + lim, nc ? 'ok' : ''], ['mt-prem', 'Extras', sel.prem.length || '–', sel.prem.length ? 'ok' : ''], ['mt-cob', 'Cobertura', '✓', 'ok']];
+    if (sel.base) MO.feitos.add('mt-base'); else MO.feitos.delete('mt-base');
     const st = E('apSteps'), atual = st.querySelector('.at'), atS = atual ? atual.dataset.s : 'mt-tam';
-    st.innerHTML = passos.map(([s, n, i, c]) => `<button data-s="${s}" class="${c} ${atS === s ? 'at' : ''}"><i>${i}</i>${n}</button>`).join('');
+    st.innerHTML = ETAPAS.map(([s, n], k) => { const f = MO.feitos.has(s), ob = s === 'mt-base' && !sel.base; return `<button data-s="${s}" class="${f ? 'ok' : ''} ${ob ? 'ob' : ''} ${atS === s ? 'at' : ''}"><i>${f ? '✓' : k + 1}</i>${n}</button>`; }).join('');
+    E('apProg').style.width = (MO.feitos.size / 6 * 100) + '%';
+    const txNx = { 'mt-meio': nm, 'mt-comp': nc, 'mt-prem': sel.prem.length };
+    ETAPAS.forEach(([id], k) => { const b = E('nx-' + id); if (!b) return; const prox = ETAPAS[k + 1], alvo = prox ? (k + 2) + '. ' + prox[1] : 'Finalizar'; const pular = id in txNx && !txNx[id]; b.textContent = (pular ? 'Pular' : 'Continuar') + ' · ' + alvo + ' →'; b.classList.toggle('go', !pular && !(id === 'mt-base' && !sel.base)); b.disabled = id === 'mt-base' && !sel.base; });
     E('apMpr').textContent = brl(precoMontar()); E('apMv').textContent = brl(precoMontar() * qtd); E('apMq').textContent = qtd;
     E('apAddM').classList.toggle('off', !sel.base); E('apAddMt').textContent = sel.base ? 'ADICIONAR' : 'ESCOLHA O SABOR';
   }

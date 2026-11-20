@@ -416,3 +416,22 @@ body.app .drawer .ok a{color:#a8d672}
 .ap-sv.video .som{display:block}
 
 @media(prefers-reduced-motion:reduce){#app *,.ap-sv *{animation:none!important}.ap-rv{opacity:1;transform:none}}
+
+/* ---------- Monte o seu: etapas explícitas ---------- */
+.ap-etapa{display:flex;align-items:center;gap:12px;padding:9px 16px 0;background:#120a24d9;font-size:12.5px;font-weight:600;color:#e6dcef}
+.ap-etapa span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap-etapa em{font-style:normal;font-weight:800;color:var(--v)}
+.ap-etapa i{flex:none;width:78px;height:6px;border-radius:9px;background:#ffffff1f;overflow:hidden}
+.ap-etapa i b{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,#7fc24a,#c4ec8e);box-shadow:0 0 10px #a8d67288;transition:width .5s cubic-bezier(.3,1.3,.5,1)}
+.ap-steps button.at i{background:var(--v);color:#1c1456}
+.ap-steps button.at{border-color:var(--v)!important}
+.ap-et{display:block;font-size:10.5px!important;letter-spacing:1.4px;font-weight:800;color:var(--lil)!important;margin:0 0 6px!important}
+.ap-n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--v);color:#1c1456;font:400 17px Anton,Impact,sans-serif;margin-right:9px;vertical-align:2px;letter-spacing:0}
+.ap-etp{transition:opacity .35s,filter .35s;padding-bottom:8px;border-bottom:1px solid var(--ln)}
+#apMlist .ap-etp:not(.foco){opacity:.42;filter:saturate(.5)}
+.ap-next{display:flex;width:calc(100% - 32px);margin:16px 16px 10px;height:50px;border-radius:14px;align-items:center;justify-content:center;font-weight:700;font-size:14.5px;border:1px solid var(--ln)!important;background:var(--vd2)!important;color:#fff;transition:all .25s}
+.ap-next.go{background:var(--v)!important;color:#1c1456;border-color:var(--v)!important;box-shadow:0 8px 22px #a8d67233}
+.ap-next:disabled{opacity:.4}
+.ap-add.pulsa{animation:apPulsa .9s 2}
+@keyframes apPulsa{50%{transform:scale(1.04);box-shadow:0 0 0 8px #a8d67240}}
+#mt-fim{border:0}
