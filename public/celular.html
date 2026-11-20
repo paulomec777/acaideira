@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Açaideira — prévia no iPhone 17</title>
+<style>
+@font-face{font-family:Poppins;font-weight:600;src:url(fonts/poppins-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Poppins;font-weight:400;src:url(fonts/poppins-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:Anton;src:url(fonts/anton-latin-400-normal.woff2) format('woff2')}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;background:radial-gradient(circle at 30% 20%,#3d1048 0,#120a24 55%,#0b0716 100%);color:#fff;font-family:Poppins,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;gap:48px;padding:32px 20px;flex-wrap:wrap}
+.lado{max-width:300px}
+.lado h1{font:400 40px/1 Anton,Impact,sans-serif;letter-spacing:.5px}
+.lado h1 span{color:#a8d672}
+.lado p{color:#c7b3ff;font-size:14px;margin:10px 0 18px;line-height:1.5}
+.atalhos{display:grid;gap:8px}
+.atalhos button{border:1px solid #ffffff2a;background:#ffffff10;color:#fff;border-radius:12px;padding:11px 14px;font:600 14px Poppins,sans-serif;text-align:left;cursor:pointer}
+.atalhos button:hover{background:#ffffff1e}
+.atalhos button.verde{background:#a8d672;color:#1c1456;border:0}
+.dica{font-size:12px;color:#c7b3ffaa;margin-top:14px}
+/* iPhone 17 — tela 402 × 874 pt */
+.iphone{--w:402px;--h:874px;position:relative;width:calc(var(--w) + 26px);height:calc(var(--h) + 26px);border-radius:68px;padding:13px;
+  background:linear-gradient(145deg,#4a4458,#1d1a24 40%,#2b2733 60%,#4a4458);box-shadow:0 0 0 2px #0008,0 50px 100px #000a,inset 0 0 0 2px #ffffff22;transform-origin:top center}
+.iphone::before,.iphone::after{content:"";position:absolute;width:4px;border-radius:3px;background:#2b2733}
+.iphone::before{left:-4px;top:180px;height:64px;box-shadow:0 84px 0 #2b2733}
+.iphone::after{right:-4px;top:230px;height:100px}
+.tela{position:relative;width:var(--w);height:var(--h);border-radius:56px;overflow:hidden;background:#120a24}
+.status{position:absolute;top:0;left:0;right:0;height:54px;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:6px 34px 0 46px;font:600 16px -apple-system,Poppins,sans-serif;color:#fff;background:#120a24}
+.status .ic{display:flex;gap:6px;align-items:center}
+.ilha{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:124px;height:36px;border-radius:20px;background:#000;z-index:4}
+iframe{position:absolute;top:54px;left:0;width:100%;height:calc(100% - 54px);border:0;background:#120a24}
+.home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:#fffd;z-index:4;pointer-events:none;mix-blend-mode:difference}
+@media(max-width:760px){.lado{max-width:100%;text-align:center}.atalhos{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="lado">
+  <h1>AÇAIDEIRA<br><span>NO IPHONE 17</span></h1>
+  <p>Navegue no site como o cliente vê no celular: role, toque nos sabores, monte o copo e vá até o pagamento.</p>
+  <div class="atalhos">
+    <button class="verde" onclick="vai('')">🏠 Início</button>
+    <button onclick="vai('','sabores')">🎨 Sabores</button>
+    <button onclick="vai('','cardapio-real')">📋 Cardápio</button>
+    <button onclick="vai('','montar')">🥤 Monte o seu</button>
+    <button onclick="sacola()">🛍 Sacola</button>
+    <button onclick="vai('#painel')">🔒 Área da loja</button>
+  </div>
+  <p class="dica"><a href="index.html" style="color:#a8d672">← Voltar ao site normal</a><br>Tela do iPhone 17: 402 × 874 pontos. O site dentro é o mesmo que vai para o ar.</p>
+</div>
+<div class="iphone" id="iphone">
+  <div class="tela">
+    <div class="status"><span id="hora">9:41</span><span class="ic">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="#fff"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.2-1.3A10.3 10.3 0 0 0 8 .7 10.3 10.3 0 0 0 .8 3.6L2 4.9a8.5 8.5 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.7 6.7 0 0 0 8 4.3a6.7 6.7 0 0 0-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3zM8 9.7a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="18" height="9" rx="2" fill="#fff"/><rect x="24.5" y="4.5" width="1.5" height="4" rx=".7" fill="#fff" opacity=".5"/></svg>
+    </span></div>
+    <div class="ilha"></div>
+    <iframe id="site" src="index.html" title="Site da Açaideira no iPhone"></iframe>
+    <div class="home"></div>
+  </div>
+</div>
+<script>
+const f=document.getElementById('site');
+function vai(hash,id){
+  const w=f.contentWindow;
+  try{
+    if(w.location.hash!==hash){w.location.hash=hash}
+    setTimeout(()=>{if(id){const e=w.document.getElementById(id);if(e)w.scrollTo({top:e.getBoundingClientRect().top+w.scrollY-60,behavior:'smooth'})}else if(!hash)w.scrollTo({top:0,behavior:'smooth'})},hash!==w.location.hash?300:50);
+  }catch(e){f.src='index.html'+hash}
+}
+function sacola(){try{f.contentWindow.abrir()}catch(e){}}
+function ajusta(){const ip=document.getElementById('iphone'),h=ip.offsetHeight,disp=innerHeight-40,s=Math.min(1,disp/h,(innerWidth-20)/ip.offsetWidth);ip.style.transform=s<1?`scale(${s})`:'';ip.style.marginBottom=s<1?`${-(1-s)*h}px`:''}
+addEventListener('resize',ajusta);ajusta();
+const relogio=()=>{const d=new Date();document.getElementById('hora').textContent=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')};relogio();setInterval(relogio,30000);
+</script>
+</body>
+</html>
