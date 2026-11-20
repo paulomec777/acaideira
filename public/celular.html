@@ -40,10 +40,11 @@ iframe{position:absolute;top:54px;left:0;width:100%;height:calc(100% - 54px);bor
   <p>Navegue no site como o cliente vê no celular: role, toque nos sabores, monte o copo e vá até o pagamento.</p>
   <div class="atalhos">
     <button class="verde" onclick="vai('')">🏠 Início</button>
-    <button onclick="vai('','sabores')">🎨 Sabores</button>
-    <button onclick="vai('','cardapio-real')">📋 Cardápio</button>
-    <button onclick="vai('','montar')">🥤 Monte o seu</button>
+    <button onclick="app('story',1)">⭕ Stories</button>
+    <button onclick="app('montar')">🥤 Monte o seu</button>
+    <button onclick="app('aba','busca')">🔎 Buscar</button>
     <button onclick="sacola()">🛍 Sacola</button>
+    <button onclick="app('aba','pedidos')">🧾 Meus pedidos</button>
     <button onclick="vai('#painel')">🔒 Área da loja</button>
   </div>
   <p class="dica"><a href="index.html" style="color:#a8d672">← Voltar ao site normal</a><br>Tela do iPhone 17: 402 × 874 pontos. O site dentro é o mesmo que vai para o ar.</p>
@@ -69,6 +70,7 @@ function vai(hash,id){
     setTimeout(()=>{if(id){const e=w.document.getElementById(id);if(e)w.scrollTo({top:e.getBoundingClientRect().top+w.scrollY-60,behavior:'smooth'})}else if(!hash)w.scrollTo({top:0,behavior:'smooth'})},hash!==w.location.hash?300:50);
   }catch(e){f.src='index.html'+hash}
 }
+function app(fn,a){try{const w=f.contentWindow,h=w.location.hash;if(h)w.location.hash='';setTimeout(()=>w.APP_[fn](a),h?300:0)}catch(e){}}
 function sacola(){try{f.contentWindow.abrir()}catch(e){}}
 function ajusta(){const ip=document.getElementById('iphone'),h=ip.offsetHeight,disp=innerHeight-40,s=Math.min(1,disp/h,(innerWidth-20)/ip.offsetWidth);ip.style.transform=s<1?`scale(${s})`:'';ip.style.marginBottom=s<1?`${-(1-s)*h}px`:''}
 addEventListener('resize',ajusta);ajusta();
