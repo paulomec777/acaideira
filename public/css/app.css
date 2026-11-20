@@ -397,7 +397,7 @@ body.app .drawer .ok a{color:#a8d672}
 .ap-sv .hd{position:absolute;top:calc(20px + env(safe-area-inset-top));left:12px;right:8px;display:flex;align-items:center;gap:8px;z-index:5;font-size:13.5px;font-weight:600;text-shadow:0 1px 4px #0008}
 .ap-sv .hd img{width:32px;height:32px;border-radius:50%;background:#fff;object-fit:contain;padding:4px}
 .ap-sv .hd small{opacity:.75;font-weight:400}
-.ap-sv .hd .fx{margin-left:auto;width:40px;height:40px;font-size:30px;line-height:1;color:#fff}
+.ap-sv .hd .svx{position:relative;pointer-events:auto;display:grid;place-items:center;margin-left:auto;width:40px;height:40px;font-size:30px;line-height:1;color:#fff}
 .ap-sv .md{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden}
 .ap-sv .md>img,.ap-sv .md>video{width:100%;height:100%;object-fit:cover}
 .ap-sv .md.cont>video{object-fit:contain;position:relative;z-index:1}

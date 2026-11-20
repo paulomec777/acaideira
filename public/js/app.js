@@ -36,10 +36,11 @@
     { id: 'zero', w: 'ZERO', bg: '#a8d672', tx: '#1c1456', n: 'Açaí Zero Açúcar', d: 'Zero açúcar, todo o sabor. A base da nossa Linha Fit.' }];
 
   // ---------- pilha de telas: o "voltar" do celular fecha a tela de cima ----------
-  const pilha = [];
-  function empilha(nome, fecha) { pilha.push({ nome, fecha }); history.pushState({ ap: nome }, ''); trava(); }
-  function desempilha() { if (pilha.length) history.back(); }
-  addEventListener('popstate', () => { const c = pilha.pop(); if (c) c.fecha(); trava(); });
+  // fechar pelo X fecha na hora (não depende do histórico, que pode falhar dentro de prévias)
+  const pilha = []; let ignora = 0;
+  function empilha(nome, fecha) { let ok = false; try { history.pushState({ ap: nome }, ''); ok = true; } catch (e) { } pilha.push({ nome, fecha, ok }); trava(); }
+  function desempilha() { const c = pilha.pop(); if (!c) return; c.fecha(); trava(); if (c.ok) { ignora++; try { history.back(); } catch (e) { ignora--; } setTimeout(() => { ignora = 0; }, 700); } }
+  addEventListener('popstate', () => { if (ignora) { ignora--; return; } const c = pilha.pop(); if (c) c.fecha(); trava(); });
   function trava() { document.body.classList.toggle('ap-trava', pilha.length > 0); }
 
   // ---------- tela inicial ----------
@@ -392,11 +393,11 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     const tt = sl.sab ? sl.sab.n : sl.t, dd = sl.sab ? sl.sab.d : sl.d, cor = sl.sab ? sl.sab.tx : '#fff';
     svw.className = 'ap-sv on' + (sl.v ? ' video' : '');
     svw.innerHTML = `<div class="bars">${st.sl.map((_, x) => `<i><b style="width:${x < j ? 100 : 0}%"></b></i>`).join('')}</div>
-<div class="hd"><img src="img/logo.png" alt=""><span>acaideira <small>· ${esc(st.nome)}</small></span><button class="fx" aria-label="Fechar">×</button></div>
+<div class="hd"><img src="img/logo.png" alt=""><span>acaideira <small>· ${esc(st.nome)}</small></span><button class="svx" aria-label="Fechar">×</button></div>
 ${md}<button class="som" aria-label="Som">🔇</button>
 <div class="tx" style="color:${cor};${sl.sab ? 'text-shadow:none' : ''}"><h4 style="color:${cor}">${esc(tt)}</h4><p>${esc(dd || '')}</p></div>
 <div class="zn e"></div><div class="zn d"></div>${sl.cta ? `<button class="cta">${esc(sl.cta[0])}</button>` : ''}`;
-    svw.querySelector('.fx').onclick = () => desempilha();
+    svw.querySelector('.svx').onclick = () => desempilha();
     if (sl.cta) svw.querySelector('.cta').onclick = () => { const f = sl.cta[1]; desempilha(); setTimeout(f, 300); };
     const bar = svw.querySelectorAll('.bars b')[j], vid = svw.querySelector('video');
     let dur = 5000, t0 = performance.now(), pausa = 0, pausadoEm = 0;
