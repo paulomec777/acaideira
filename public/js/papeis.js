@@ -61,6 +61,7 @@
   // ---------- Agência ----------
   async function agencia() {
     const t = $id('tab-agencia'); if (!t) return;
+    if (window.AGENCIA) return window.AGENCIA(SB, t);
     t.innerHTML = `<div class="pp-intro"><span class="al-kick">SÓ A AGÊNCIA VÊ ESTA ABA</span><p>Configurações da loja, bairros e taxas de entrega e os stories do site. A loja não consegue alterar nada daqui.</p></div>
       <div class="al-card pp-card" id="pp-stories"></div><div class="al-card pp-card" id="pp-config"></div><div class="al-card pp-card" id="pp-bairros"></div>`;
     stories(); config(); bairros();

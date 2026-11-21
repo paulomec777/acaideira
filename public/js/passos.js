@@ -59,6 +59,9 @@
     if (b.dataset.esg) return;
     const vazio = b.classList.contains('vazio0'), cont = b.classList.contains('cont'), stat = b.classList.contains('stat');
     D.at = id;
+    // tamanho e cobertura: marca como escolhido ANTES do render do site, senão o decora() tira o .sel e o copo só enche no 2º toque
+    if (id === 'tam') { if (!D.tamOk) render._t = null; D.tamOk = true; }
+    if (id === 'cob') D.cobOk = true;
     setTimeout(() => {
       if (id === 'tam') { D.tamOk = true; avancar('tam'); }
       else if (id === 'base' && !stat && sel.base) avancar('base');
