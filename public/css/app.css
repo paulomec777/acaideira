@@ -444,3 +444,69 @@ body.app .drawer .ok a{color:#a8d672}
 .ap-next{position:sticky;bottom:12px;z-index:3;box-shadow:0 10px 30px #000c,0 8px 22px #a8d67233!important}
 .ap-add #apAddMt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ap-add.off #apAddMt{font-size:16px}
+
+/* ===== Monte o seu no computador: 6 etapas guiadas ===== */
+.pc-etapa{margin:0 0 14px;padding:12px 14px;border-radius:16px;background:#ffffff0d;border:1px solid #ffffff1f}
+.pc-et-tx{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:600;color:#e6dcef}
+.pc-et-tx span{flex:1;min-width:0}
+.pc-et-tx em{font-style:normal;font-weight:800;color:#a8d672}
+.pc-et-tx i{flex:none;width:90px;height:6px;border-radius:9px;background:#ffffff1f;overflow:hidden}
+.pc-et-tx i b{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,#7fc24a,#c4ec8e);box-shadow:0 0 10px #a8d67288;transition:width .5s cubic-bezier(.3,1.3,.5,1)}
+.pc-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pc-chips button{display:flex;align-items:center;gap:6px;padding:5px 11px 5px 5px;border-radius:999px;border:1px solid #ffffff26;background:none;color:#b9a8cc;font:600 12px Poppins,sans-serif;cursor:pointer;transition:all .2s}
+.pc-chips button i{font-style:normal;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#ffffff1a;display:grid;place-items:center;font-size:10.5px;font-weight:800;color:#fff}
+.pc-chips button.ok{color:#fff;border-color:#a8d67266}
+.pc-chips button.ok i{background:#a8d672;color:#1c1456}
+.pc-chips button.ob:not(.ok) i{background:#ff7eb6;color:#1c1456}
+.pc-chips button.at{background:#ffffff1f;color:#fff;border-color:#a8d672}
+.pc-req{display:inline-block;margin-left:10px;vertical-align:middle;font:800 10px Poppins,sans-serif;letter-spacing:.6px;border-radius:7px;padding:4px 8px;background:#ffffff1f;color:#fff;transition:all .3s}
+.pc-req.ob{background:#ff7eb6;color:#1c1456}.pc-req.ok{background:#a8d672;color:#1c1456}.pc-req.cnt{background:#c7b3ff;color:#1c1456}.pc-req.opc{background:transparent;color:#b9a8cc;border:1px solid #ffffff2e}
+.step .n.pc-ok{background:#a8d672!important;color:#1c1456!important}
+[data-etapa]{transition:opacity .35s,filter .35s}
+body:not(.app) [data-etapa]:not(.pc-foco):not(.pc-hover){opacity:.5;filter:saturate(.6)}
+.pc-next{position:sticky;bottom:16px;z-index:3;display:block;width:100%;margin:14px 0 4px;height:48px;border-radius:14px;border:0;background:linear-gradient(135deg,#c4ec8e,#a8d672 45%,#7fc24a);color:#1c1456;font:700 14.5px Poppins,sans-serif;cursor:pointer;box-shadow:0 10px 28px #000a,0 8px 22px #a8d67233}
+.pc-next[hidden]{display:none}
+#addMontar.pc-off{filter:grayscale(1) brightness(.8)}
+#addMontar.pc-pulsa,.ap-add.pulsa{animation:apPulsa .9s 2}
+@keyframes apPulsa{50%{transform:scale(1.04);box-shadow:0 0 0 8px #a8d67240}}
+[data-etapa].pc-erro{animation:pcErro .5s}
+@keyframes pcErro{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.opt.pc-falta{border-style:dashed!important;opacity:.8}
+.opt[data-esg],.ap-t[data-esg]{position:relative;opacity:.55}
+.opt[data-esg] img,.opt[data-esg] .ft,.ap-t[data-esg] img{filter:grayscale(1)}
+.esg-tag{position:absolute;top:8px;left:8px;z-index:6;background:#ff7eb6;color:#1c1456;font:800 10px/1.2 Poppins,sans-serif;font-style:normal;letter-spacing:.8px;padding:3px 7px;border-radius:6px;transform:rotate(-4deg)}
+
+/* ===== Área da loja: esgotados e aba da agência ===== */
+.pp-card{margin-bottom:14px}
+.pp-card h4{margin:0 0 4px;font:800 18px Poppins,sans-serif;color:#2a1035}
+.pp-h{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.pp-h .al-sec{background:#f3ecf8;color:#3d1048;border:0;min-height:44px}
+.pp-g{font:800 12px Poppins,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#7b3a8f;margin:16px 0 8px}
+.pp-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pp-chip{border:1.5px solid #e3d6ea;background:#fff;color:#2a1035;border-radius:999px;padding:9px 14px;font:600 13.5px Poppins,sans-serif;cursor:pointer;transition:.15s}
+.pp-chip:hover{border-color:#7b3a8f}
+.pp-chip.esg{background:#ffe3ee;border-color:#ff7eb6;color:#a3174f;text-decoration:line-through}
+.pp-intro{background:#ffffff0f;border:1px dashed #a8d67266;border-radius:16px;padding:14px 16px;margin-bottom:14px;color:#e6dcff;font-size:14px}
+.pp-intro p{margin:6px 0 0}
+.pp-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 14px;margin-top:10px}
+.pp-form label{display:flex;flex-direction:column;gap:5px;font:600 12.5px Poppins,sans-serif;color:#5b4a6e}
+.pp-form .in,.pp-hor .in,.pp-bai .in{height:44px;border:1.5px solid #e3d6ea;border-radius:12px;padding:0 12px;font:500 14px Poppins,sans-serif;color:#2a1035;background:#fff;width:100%;box-sizing:border-box}
+.pp-form input[type=file]{font:500 13px Poppins,sans-serif;padding:8px 0}
+.pp-hor{display:grid;gap:8px}
+.pp-dia{display:grid;grid-template-columns:100px 90px 1fr 24px 1fr;gap:8px;align-items:center;font:600 13.5px Poppins,sans-serif;color:#2a1035}
+.pp-ab{display:flex;align-items:center;gap:6px;font:600 12.5px Poppins,sans-serif;color:#5b4a6e;white-space:nowrap}
+.pp-bh,.pp-bai{display:grid;grid-template-columns:1fr 130px 90px 48px;gap:8px;align-items:center;margin-bottom:8px}
+.pp-bh{font:700 12px Poppins,sans-serif;color:#7b3a8f;margin:12px 0 6px}
+.pp-bai .al-sec,#pb-add{min-height:44px;background:#f3ecf8;color:#3d1048;border:0}
+#pb-add{margin:4px 0 12px;width:100%}
+.pp-card .al-big{width:100%;margin-top:12px}
+.pp-sts{display:grid;gap:10px;margin-top:12px}
+.pp-st{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;border:1.5px solid #eee3f3;border-radius:14px;padding:8px}
+.pp-st.off{opacity:.5}
+.pp-st img,.pp-st video{width:72px;height:96px;object-fit:cover;border-radius:10px;background:#2a1846}
+.pp-sti b{display:block;font:700 14.5px Poppins,sans-serif;color:#2a1035}
+.pp-sti small{display:block;font-size:12.5px;color:#6b5a78;margin-top:2px}
+.pp-sta{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pp-sta .al-sec{min-height:38px;padding:0 12px;background:#f3ecf8;color:#3d1048;border:0;font-size:13px}
+@media(max-width:700px){.pp-dia{grid-template-columns:1fr 1fr;}.pp-dia b{grid-column:1/-1}.pp-dia span{display:none}.pp-bh,.pp-bai{grid-template-columns:1fr 90px 70px 44px}.pp-st{grid-template-columns:64px 1fr}.pp-sta{grid-column:1/-1;justify-content:flex-start}}
+.pp-form [hidden]{display:none!important}

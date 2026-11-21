@@ -42,6 +42,15 @@ function lojaAberta(cfg) {
 }
 const so = (v, max = 200) => String(v ?? '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, max);
 const reais = v => Math.round(v * 100) / 100;
+// Stories cadastrados pela agência (se a tabela ainda não existir, o site segue sem eles)
+async function lerDestaques() {
+  try {
+    const hoje = new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
+    const { data, error } = await db.from('destaques').select('titulo,texto,midia_url,tipo,botao_texto,botao_link,inicio,fim').eq('ativo', true).order('ordem');
+    if (error) return [];
+    return (data || []).filter(d => (!d.inicio || d.inicio <= hoje) && (!d.fim || d.fim >= hoje));
+  } catch (e) { return []; }
+}
 async function lerConfig() {
   const [{ data: cfg }, { data: bairros }, { data: esg }] = await Promise.all([
     db.from('loja_config').select('*').eq('id', 1).single(),
@@ -70,6 +79,7 @@ app.get('/api/config', async (_req, res) => {
       tempoEntrega: cfg.tempo_entrega, tempoRetirada: cfg.tempo_retirada, whatsapp: cfg.whatsapp,
       bairros: bairros.map(b => ({ n: b.nome, t: Number(b.taxa) })), esgotados: esgotados.map(e => e.item_id),
       pagamentoOnline: !!MP_ACCESS_TOKEN,
+      destaques: await lerDestaques(),
       supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_PUBLISHABLE_KEY,
     });
   } catch (e) { console.error(e); res.status(500).json({ erro: 'Não foi possível carregar a loja.' }); }

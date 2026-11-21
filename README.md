@@ -62,3 +62,16 @@ SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... SUPABASE_PUBLISHABLE_KEY=... npm 
 
 ## Tecnologias
 Node.js · Express · Supabase (PostgreSQL, Auth, Realtime, RLS) · Mercado Pago API · Railway · HTML/CSS/JS sem framework · SVG animado.
+
+## Acessos: loja × agência
+
+A Área da loja tem dois papéis, guardados na tabela `equipe` (coluna `papel`):
+
+| Papel | Vê no painel | Pode alterar |
+|---|---|---|
+| `loja` | Pedidos, Mensagens prontas, Resumo, Como usar, Esgotados | Status dos pedidos, itens esgotados, abrir/fechar a loja |
+| `agencia` | Tudo da loja + aba **Agência** | Também: configurações da loja, horário, bairros e taxas, stories do site (com envio de foto e vídeo) |
+
+As regras ficam no banco (RLS + gatilho `privado.protege_config`), não só na tela: mesmo que alguém da loja tente gravar pela API, o Supabase recusa. Migração em `supabase/migrations/20261121_papeis_loja_agencia.sql`.
+
+Para liberar um acesso depois do cadastro: `insert into equipe (user_id, nome, papel) values ('<id do usuário>', 'Nome', 'loja');` (ou `'agencia'`).

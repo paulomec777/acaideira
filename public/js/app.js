@@ -229,6 +229,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       const t = e.target.closest('[data-o]'); if (!t) return;
       const [tipo, id] = t.dataset.o.split(':'), lim = TAMANHOS.find(x => x.id === sel.tam).lim;
       const tog = (arr, max) => { const k = arr.indexOf(id); if (k >= 0) { arr.splice(k, 1); return true; } if (max && arr.length >= max) { toast(`Máximo de ${max}: desmarque um para trocar`); vibra([10, 40, 10]); return false; } arr.push(id); return true; };
+      if (['base', 'meio', 'comp', 'prem'].includes(tipo) && window.ITEM_ESGOTADO && ITEM_ESGOTADO(id)) { toast('Esse item esgotou hoje 😕'); vibra([10, 40, 10]); return; }
       if (tipo === 'nao') { MO.nao[id] = true; if (id === 'meio') sel.meio = []; else sel.prem = []; vibra(); atualizaMontar(); avancar(id === 'meio' ? 'mt-meio' : 'mt-prem'); return; }
       if (tipo === 'tam') { sel.tam = id; MO.tamOk = true; }
       else if (tipo === 'base') sel.base = id;
@@ -306,6 +307,8 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       const dis = !on && ((tipo === 'comp' && nc >= lim) || (tipo === 'meio' && nm >= 2));
       if (on && !el.classList.contains('on') && el.animate) el.animate([{ transform: 'scale(.9)' }, { transform: 'scale(1.05)' }, { transform: 'scale(1)' }], { duration: 340, easing: 'cubic-bezier(.3,1.6,.5,1)' });
       el.classList.toggle('on', !!on); el.classList.toggle('dis', dis);
+      const es = ['base', 'meio', 'comp', 'prem'].includes(tipo) && window.ITEM_ESGOTADO && ITEM_ESGOTADO(id);
+      if (es && !el.dataset.esg) { el.dataset.esg = '1'; el.insertAdjacentHTML('beforeend', '<i class="esg-tag">ESGOTADO</i>'); }
     });
     badge('bTam', MO.tamOk ? 'ok' : 'ob', MO.tamOk ? '✓' : 'OBRIGATÓRIO'); badge('bBase', sel.base ? 'ok' : 'ob', sel.base ? '✓' : 'OBRIGATÓRIO');
     badge('bMeio', nm ? 'cnt' : MO.nao.meio ? 'ok' : 'opc', nm ? nm + '/2' : MO.nao.meio ? 'NÃO QUERO ✓' : 'OPCIONAL');
@@ -420,10 +423,21 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     { id: 'trad', nome: 'Tradicionais', capa: 'img/m_trad2.jpg', sl: [0, 1, 2, 3].map(pr) },
     { id: 'kids', nome: 'Zero & Kids', capa: 'img/m_kids.jpg', sl: [8, 9].map(pr) },
     { id: 'vitrine', nome: 'Vitrine', capa: 'img/g2.jpg', sl: [1, 2, 3, 4, 5, 6, 7, 8].map(n => ({ i: `img/g${n}.jpg`, t: 'Direto da vitrine', d: 'Nossas taças de pertinho, feitas na hora.', cta: ['VER O CARDÁPIO', () => vaiPara('ap-s-dest')] })) }];
+  // stories cadastrados pela agência no painel (vêm do servidor)
+  function novidades() {
+    const ds = ((window.API_ONLINE && API_ONLINE.destaques) || []).filter(d => /^https:\/\//.test(d.midia_url));
+    if (!ds.length || STORIES.some(s => s.id === 'novidades')) return;
+    const linkOk = l => l && (/^https:\/\//.test(l) || l.startsWith('#'));
+    const sl = ds.map(d => ({ ...(d.tipo === 'video' ? { v: d.midia_url, p: '' } : { i: d.midia_url }), t: d.titulo, d: d.texto || '', cta: d.botao_texto && linkOk(d.botao_link) ? [d.botao_texto.toUpperCase(), () => { if (d.botao_link === '#montar') montar(); else if (d.botao_link.startsWith('#')) vaiPara(d.botao_link.slice(1)); else open(d.botao_link, '_blank', 'noopener'); }] : null }));
+    const capa = ds.find(d => d.tipo === 'foto');
+    STORIES.splice(1, 0, { id: 'novidades', nome: 'Novidades', capa: capa ? capa.midia_url : 'img/logo.png', sl });
+    try { localStorage.setItem('acaideira_vistos', JSON.stringify(vistos().filter(x => x !== 'novidades'))); } catch (e) { }
+    if (E('apStories')) renderStories();
+  }
   const vistos = () => { try { return JSON.parse(localStorage.getItem('acaideira_vistos') || '[]'); } catch (e) { return []; } };
   function renderStories() {
     const v = vistos();
-    E('apStories').innerHTML = STORIES.map((s, k) => `<button class="ap-sto ${v.includes(s.id) ? 'visto' : ''}" data-k="${k}"><div class="rg ${s.mais ? 'mais' : ''}"><span>${s.mais ? '+' : `<img src="${s.capa}" alt="" loading="lazy">`}</span></div><small>${esc(s.nome)}</small></button>`).join('');
+    E('apStories').innerHTML = STORIES.map((s, k) => `<button class="ap-sto ${v.includes(s.id) ? 'visto' : ''}" data-k="${k}"><div class="rg ${s.mais ? 'mais' : ''}"><span>${s.mais ? '+' : `<img src="${esc(s.capa)}" alt="" loading="lazy">`}</span></div><small>${esc(s.nome)}</small></button>`).join('');
     E('apStories').querySelectorAll('.ap-sto').forEach(b => b.onclick = () => { const s = STORIES[+b.dataset.k]; vibra(); if (s.mais) montar(); else story(+b.dataset.k); });
   }
   let S = null;
@@ -434,9 +448,9 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     const st = STORIES[k], sl = st.sl[j];
     try { const v = vistos(); if (!v.includes(st.id)) { v.push(st.id); localStorage.setItem('acaideira_vistos', JSON.stringify(v)); } } catch (e) { }
     let md;
-    if (sl.v) md = `<div class="md ${sl.cont ? 'cont' : ''}">${sl.cont ? `<div class="blur" style="background-image:url(${sl.p})"></div>` : ''}<video src="${sl.v}" poster="${sl.p}" playsinline muted autoplay preload="auto"></video></div>`;
+    if (sl.v) md = `<div class="md ${sl.cont ? 'cont' : ''}">${sl.cont ? `<div class="blur" style="background-image:url('${esc(sl.p)}')"></div>` : ''}<video src="${esc(sl.v)}" poster="${esc(sl.p)}" playsinline muted autoplay preload="auto"></video></div>`;
     else if (sl.sab) md = `<div class="md" style="background:${sl.sab.bg};color:${sl.sab.tx}"><div class="sab"><div class="w">${sl.sab.w}</div><img src="img/sab/${sl.sab.id}.jpg" alt=""></div></div>`;
-    else md = `<div class="md"><div class="blur" style="background-image:url(${sl.i})"></div><img src="${sl.i}" alt="" style="position:relative;z-index:1;object-fit:contain"></div>`;
+    else md = `<div class="md"><div class="blur" style="background-image:url('${esc(sl.i)}')"></div><img src="${esc(sl.i)}" alt="" style="position:relative;z-index:1;object-fit:contain"></div>`;
     const tt = sl.sab ? sl.sab.n : sl.t, dd = sl.sab ? sl.sab.d : sl.d, cor = sl.sab ? sl.sab.tx : '#fff';
     svw.className = 'ap-sv on' + (sl.v ? ' video' : '');
     svw.innerHTML = `<div class="bars">${st.sl.map((_, x) => `<i><b style="width:${x < j ? 100 : 0}%"></b></i>`).join('')}</div>
@@ -480,5 +494,5 @@ ${md}<button class="som" aria-label="Som">🔇</button>
   function liga() { document.body.classList.toggle('app', mq.matches); if (mq.matches) { monta(); cartBar(); } }
   (mq.addEventListener ? mq.addEventListener('change', liga) : mq.addListener(liga));
   liga();
-  let tent = 0; const iv = setInterval(() => { statusLoja(); renderModo(); if (window.API_ONLINE || ++tent > 10) clearInterval(iv); }, 800);
+  let tent = 0; const iv = setInterval(() => { statusLoja(); renderModo(); novidades(); if (window.API_ONLINE || ++tent > 10) clearInterval(iv); }, 800);
 })();

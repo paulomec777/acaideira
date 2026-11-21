@@ -226,6 +226,7 @@
       return;
     }
     $id('al-semacesso')?.remove();
+    if (window.PAINEL_PAPEL) PAINEL_PAPEL(eq, SB);
     const top = document.querySelector('.al-topbtn');
     if (top && !$id('al-modo')) top.insertAdjacentHTML('afterbegin', `<select class="al-chip" id="al-modo" onchange="modoLoja(this.value)"><option value="auto">🕐 Horário automático</option><option value="aberto">🟢 Forçar aberto</option><option value="fechado">🔴 Forçar fechado</option></select><button class="al-chip" onclick="sairLoja()">Sair (${esc(eq.nome)})</button>`);
     const { data: cfg } = await SB.from('loja_config').select('modo_abertura').eq('id', 1).single();
