@@ -113,12 +113,8 @@
     if (vc) { vc.classList.remove('sel'); vc.classList.add('pc-falta'); vc.querySelector('b').textContent = 'Nenhum ainda'; const s = vc.querySelector('span:not(.lmp)'); if (s) s.textContent = `escolha de 1 a ${L} · grátis`; }
     const lt = E('lim-txt'); if (lt) lt.textContent = `Grátis e obrigatório: escolha de 1 a ${L} (${nc}/${L}). Já escolheu tudo o que queria? Toque em Continuar.`;
     // selos de cada etapa
-    badge('tam', D.tamOk ? 'ok' : 'ob', D.tamOk ? '✓' : 'OBRIGATÓRIO');
-    badge('base', sel.base ? 'ok' : 'ob', sel.base ? '✓' : 'OBRIGATÓRIO');
-    badge('meio', nm ? 'cnt' : D.nao.meio ? 'ok' : 'opc', nm ? nm + '/2' : D.nao.meio ? 'NÃO QUERO ✓' : 'OPCIONAL');
-    badge('comp', nc ? (nc >= L ? 'ok' : 'cnt') : 'ob', nc ? nc + '/' + L : 'OBRIGATÓRIO');
-    badge('prem', np ? 'cnt' : D.nao.prem ? 'ok' : 'opc', np ? String(np) : D.nao.prem ? 'NÃO QUERO ✓' : 'OPCIONAL');
-    badge('cob', D.cobOk ? 'ok' : 'ob', D.cobOk ? '✓' : 'OBRIGATÓRIO');
+    // o selo mantém o texto e só fica verde quando a etapa foi escolhida
+    ETAPAS.forEach(e => badge(e.id, feito(e.id) ? 'ok' : OBRIG[e.id] ? 'ob' : 'opc', OBRIG[e.id] ? 'OBRIGATÓRIO' : 'OPCIONAL'));
     // botões "continuar" quando já há escolha e ainda cabe mais
     const nx = (id, mostra, tx) => { const b = E('pcNx-' + id); if (b) { b.hidden = !mostra; b.textContent = tx; } };
     const prox = id => { const k = ETAPAS.findIndex(e => e.id === id); return ETAPAS[k + 1] ? `${k + 2}. ${ETAPAS[k + 1].nome}` : 'Finalizar'; };

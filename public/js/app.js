@@ -310,11 +310,8 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       const es = ['base', 'meio', 'comp', 'prem'].includes(tipo) && window.ITEM_ESGOTADO && ITEM_ESGOTADO(id);
       if (es && !el.dataset.esg) { el.dataset.esg = '1'; el.insertAdjacentHTML('beforeend', '<i class="esg-tag">ESGOTADO</i>'); }
     });
-    badge('bTam', MO.tamOk ? 'ok' : 'ob', MO.tamOk ? '✓' : 'OBRIGATÓRIO'); badge('bBase', sel.base ? 'ok' : 'ob', sel.base ? '✓' : 'OBRIGATÓRIO');
-    badge('bMeio', nm ? 'cnt' : MO.nao.meio ? 'ok' : 'opc', nm ? nm + '/2' : MO.nao.meio ? 'NÃO QUERO ✓' : 'OPCIONAL');
-    badge('bComp', nc ? (nc >= lim ? 'ok' : 'cnt') : 'ob', nc ? nc + '/' + lim : 'OBRIGATÓRIO');
-    badge('bPrem', np ? 'cnt' : MO.nao.prem ? 'ok' : 'opc', np ? String(np) : MO.nao.prem ? 'NÃO QUERO ✓' : 'OPCIONAL');
-    badge('bCob', MO.cobOk ? 'ok' : 'ob', MO.cobOk ? '✓' : 'OBRIGATÓRIO');
+    // o selo mantém o texto e só fica verde quando a etapa foi escolhida
+    [['bTam', 'mt-tam', 1], ['bBase', 'mt-base', 1], ['bMeio', 'mt-meio', 0], ['bComp', 'mt-comp', 1], ['bPrem', 'mt-prem', 0], ['bCob', 'mt-cob', 1]].forEach(([b, id, ob]) => badge(b, feito(id) ? 'ok' : ob ? 'ob' : 'opc', ob ? 'OBRIGATÓRIO' : 'OPCIONAL'));
     const cs = E('mt-comp-s'); if (cs) cs.textContent = `Grátis · escolha de 1 a ${lim} no ${t.ap}`;
     // botões "continuar" só quando já há escolha e ainda cabe mais
     const nx = (id, mostra, txt) => { const b = E('nx-' + id); if (b) { b.hidden = !mostra; b.textContent = txt; } };
