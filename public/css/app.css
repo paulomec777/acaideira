@@ -427,8 +427,8 @@ body.app .drawer .ok a{color:#a8d672}
 .ap-steps button.at{border-color:var(--v)!important}
 .ap-et{display:block;font-size:10.5px!important;letter-spacing:1.4px;font-weight:800;color:var(--lil)!important;margin:0 0 6px!important}
 .ap-n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--v);color:#1c1456;font:400 17px Anton,Impact,sans-serif;margin-right:9px;vertical-align:2px;letter-spacing:0}
-.ap-etp{transition:opacity .35s,filter .35s;padding-bottom:8px;border-bottom:1px solid var(--ln)}
-#apMlist .ap-etp:not(.foco){opacity:.42;filter:saturate(.5)}
+.ap-etp{transition:opacity .3s;padding-bottom:8px;border-bottom:1px solid var(--ln)}
+#apMlist .ap-etp:not(.foco){opacity:.55}
 .ap-next{display:flex;width:calc(100% - 32px);margin:16px 16px 10px;height:50px;border-radius:14px;align-items:center;justify-content:center;font-weight:700;font-size:14.5px;border:1px solid var(--ln)!important;background:var(--vd2)!important;color:#fff;transition:all .25s}
 .ap-next.go{background:var(--v)!important;color:#1c1456;border-color:var(--v)!important;box-shadow:0 8px 22px #a8d67233}
 .ap-next:disabled{opacity:.4}
@@ -462,8 +462,8 @@ body.app .drawer .ok a{color:#a8d672}
 .pc-req{display:inline-block;margin-left:10px;vertical-align:middle;font:800 10px Poppins,sans-serif;letter-spacing:.6px;border-radius:7px;padding:4px 8px;background:#ffffff1f;color:#fff;transition:all .3s}
 .pc-req.ob{background:#ff7eb6;color:#1c1456}.pc-req.ok{background:#a8d672;color:#1c1456}.pc-req.cnt{background:#c7b3ff;color:#1c1456}.pc-req.opc{background:transparent;color:#b9a8cc;border:1px solid #ffffff2e}
 .step .n.pc-ok{background:#a8d672!important;color:#1c1456!important}
-[data-etapa]{transition:opacity .35s,filter .35s}
-body:not(.app) [data-etapa]:not(.pc-foco):not(.pc-hover){opacity:.5;filter:saturate(.6)}
+body:not(.app) [data-etapa]{position:relative;border-radius:18px;padding:12px 14px;margin-left:-14px;margin-right:-14px;transition:box-shadow .3s,background .3s}
+body:not(.app) [data-etapa].pc-foco{background:#a8d6720d;box-shadow:inset 3px 0 0 #a8d672,0 0 0 1px #a8d67226}
 .pc-next{position:sticky;bottom:16px;z-index:3;display:block;width:100%;margin:14px 0 4px;height:48px;border-radius:14px;border:0;background:linear-gradient(135deg,#c4ec8e,#a8d672 45%,#7fc24a);color:#1c1456;font:700 14.5px Poppins,sans-serif;cursor:pointer;box-shadow:0 10px 28px #000a,0 8px 22px #a8d67233}
 .pc-next[hidden]{display:none}
 #addMontar.pc-off{filter:grayscale(1) brightness(.8)}
@@ -510,3 +510,9 @@ body:not(.app) [data-etapa]:not(.pc-foco):not(.pc-hover){opacity:.5;filter:satur
 .pp-sta .al-sec{min-height:38px;padding:0 12px;background:#f3ecf8;color:#3d1048;border:0;font-size:13px}
 @media(max-width:700px){.pp-dia{grid-template-columns:1fr 1fr;}.pp-dia b{grid-column:1/-1}.pp-dia span{display:none}.pp-bh,.pp-bai{grid-template-columns:1fr 90px 70px 44px}.pp-st{grid-template-columns:64px 1fr}.pp-sta{grid-column:1/-1;justify-content:flex-start}}
 .pp-form [hidden]{display:none!important}
+
+/* Desempenho: o desfoque de vidro em áreas grandes era recalculado a cada quadro
+   enquanto o copo anima. Sem ele o visual é o mesmo (o fundo atrás é liso) e a tela roda liso. */
+.grid>.card,.pronto,.selos div,.opt .chk,.opt.foto .chk{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.grid>.card{background:#1a1030e6!important}
+.pronto{background:#1a1030f0!important}

@@ -246,7 +246,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       else if (tipo === 'cob') avancar('mt-cob');
     };
     E('apSteps').onclick = e => { const b = e.target.closest('[data-s]'); if (b) irPara(b.dataset.s); };
-    pg.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { qtd = Math.max(1, qtd + +b.dataset.q); vibra(); atualizaMontar(); });
+    pg.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { qtd = Math.max(1, qtd + +b.dataset.q); vibra(); atualizaMontar(true); });
     const ta = E('apObsM'); ta.oninput = () => { MO.obs = ta.value; E('apOm').textContent = ta.value.length + '/140'; };
     E('apAddM').onclick = addMontarApp;
     atualizaMontar(); E('apEsp').style.height = mtop.offsetHeight + 'px'; sc.scrollTop = 0; sc.onscroll();
@@ -261,7 +261,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
   const falta = () => ETAPAS.filter(([id]) => !feito(id));
   function irPara(id) { const sc = E('apMsc'), el = E(id); if (!el) return; const topo = E('apMtop').offsetHeight - E('apCupw').offsetHeight + 172; const y = sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top; sc.scrollTo({ top: Math.max(0, y - topo + 2), behavior: 'smooth' }); }
   function avancar(id) {
-    atualizaMontar();
+    atualizaMontar(true);
     const k = ETAPAS.findIndex(e => e[0] === id);
     // próxima etapa ainda não feita (depois desta; se não houver, a primeira que faltar)
     const depois = ETAPAS.slice(k + 1).find(([e]) => !feito(e)), antes = falta()[0];
@@ -298,8 +298,8 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       `<div class="ap-grid">${COBS.map(c => tile('cob:' + c.id, c.id !== 'nenhuma' ? `img/cob/${c.id}.jpg` : null, '🚫', c.nome, c.id === 'nenhuma' ? 'SÓ AÇAÍ' : 'GRÁTIS')).join('')}</div>`);
   }
   function badge(id, cls, txt) { const b = E(id); if (b) { b.className = 'ap-req ' + cls; b.textContent = txt; } }
-  function atualizaMontar() {
-    try { render(); } catch (e) { }
+  function atualizaMontar(semCopo) {
+    if (!semCopo) try { render(); } catch (e) { }
     const t = TAMANHOS.find(x => x.id === sel.tam), lim = t.lim, nc = sel.comps.length, nm = sel.meio.length, np = sel.prem.length;
     E('apMlist').querySelectorAll('[data-o]').forEach(el => {
       const [tipo, id] = el.dataset.o.split(':');

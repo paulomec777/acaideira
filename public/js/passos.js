@@ -38,7 +38,7 @@
     const sticky = document.querySelector('#montar ~ .grid .card.sticky') || document.querySelector('.card.sticky');
     if (!sticky) return;
     sticky.insertAdjacentHTML('afterbegin', `<div class="pc-etapa" id="pcEtapa"><div class="pc-et-tx"><span id="pcEtTx"></span><i><b id="pcProg"></b></i></div><div class="pc-chips" id="pcChips"></div></div>`);
-    E('pcChips').onclick = e => { const b = e.target.closest('[data-s]'); if (b) { D.at = b.dataset.s; irPara(b.dataset.s); render(); } };
+    E('pcChips').onclick = e => { const b = e.target.closest('[data-s]'); if (b) { D.at = b.dataset.s; irPara(b.dataset.s); decora(); } };
     ETAPAS.forEach(e => {
       const st = stepEl(e.id), h = st.querySelector('h3');
       st.dataset.etapa = e.id;
@@ -64,12 +64,12 @@
       else if (id === 'base' && !stat && sel.base) avancar('base');
       else if (id === 'meio') {
         if (vazio && !sel.meio.length) { D.nao.meio = true; avancar('meio'); }
-        else { if (sel.meio.length) D.nao.meio = false; if (sel.meio.length >= 2) avancar('meio'); else render(); }
+        else { if (sel.meio.length) D.nao.meio = false; if (sel.meio.length >= 2) avancar('meio'); else decora(); }
       }
-      else if (id === 'comp') { if (!vazio && !cont && sel.comps.length >= lim()) avancar('comp'); else render(); }
+      else if (id === 'comp') { if (!vazio && !cont && sel.comps.length >= lim()) avancar('comp'); else decora(); }
       else if (id === 'prem') {
         if (vazio && !sel.prem.length) { D.nao.prem = true; avancar('prem'); }
-        else { if (sel.prem.length) D.nao.prem = false; render(); }
+        else { if (sel.prem.length) D.nao.prem = false; decora(); }
       }
       else if (id === 'cob') { D.cobOk = true; avancar('cob'); }
     }, 0);
@@ -83,7 +83,7 @@
     const k = ETAPAS.findIndex(e => e.id === id);
     const depois = ETAPAS.slice(k + 1).find(e => !feito(e.id)), antes = falta()[0];
     const prox = depois ? depois.id : antes ? antes.id : 'fim';
-    D.at = prox === 'fim' ? id : prox; render();
+    D.at = prox === 'fim' ? id : prox; decora();
     setTimeout(() => {
       irPara(prox);
       if (prox === 'fim') { const a = E('addMontar'); a.classList.remove('pc-pulsa'); void a.offsetWidth; a.classList.add('pc-pulsa'); }
@@ -147,7 +147,7 @@
     if (APP()) return _add.call(this, ev);
     const fl = falta();
     if (fl.length) {
-      D.at = fl[0].id; render(); irPara(fl[0].id);
+      D.at = fl[0].id; decora(); irPara(fl[0].id);
       const st = stepEl(fl[0].id); st.classList.remove('pc-erro'); void st.offsetWidth; st.classList.add('pc-erro');
       toast('Falta escolher: ' + fl.map(e => e.nome).join(', ') + ' 💜'); return;
     }
