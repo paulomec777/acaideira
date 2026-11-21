@@ -23,7 +23,7 @@
 
   window.AGENCIA = async function (sb, el) {
     SB = sb; root = el;
-    root.innerHTML = `<div class="ag">
+    root.innerHTML = (window.AGENCIA_DEMO ? `<div class="ag-demo">🧪 <b>Demonstração</b> com dados de exemplo: dá para mexer em tudo, mas nada é salvo de verdade. Com o site no ar, esta aba aparece para quem entra com a conta da agência.</div>` : '') + `<div class="ag">
       <aside class="ag-menu" id="agMenu">${SECOES.map(s => `<button data-s="${s.id}"><i>${s.ico}</i><span><b>${s.nome}</b><small>${s.sub}</small></span><em class="ag-dot" hidden></em></button>`).join('')}</aside>
       <main class="ag-main"><div id="agMain"><div class="ag-load">Carregando dados da loja…</div></div>
         <div class="ag-save" id="agSave" hidden><span id="agSaveTx">Alterações não salvas</span><button class="ag-b2" id="agDesc">Descartar</button><button class="ag-b1" id="agSalva">Salvar alterações</button></div></main></div>`;
@@ -361,5 +361,51 @@
     bt.disabled = false; bt.textContent = 'Salvar alterações';
   }
   function aviso(t, erro) { if (window.toast) toast(t); const s = root.querySelector('#agSaveTx'); if (erro && s) { root.querySelector('#agSave').hidden = false; s.textContent = t; } }
+
+  // ---------- Demonstração (só quando o site roda sem servidor, ex.: prévia) ----------
+  // Mostra a aba Agência com dados de exemplo guardados só na memória: nada vai para o banco.
+  function bancoDemo() {
+    const hoje = hojeSP(), T = {
+      loja_config: [{ id: 1, modo_abertura: 'auto', tempo_entrega: '35 a 50 min', tempo_retirada: '15 min', pedido_minimo: 15, whatsapp: '5561982022436', pix_nome: 'Acaideira', pix_cidade: 'Novo Gama', atualizado_em: new Date().toISOString(), horario: { '0': ['14:00', '22:00'], '1': null, '2': ['14:00', '22:00'], '3': ['14:00', '22:00'], '4': ['14:00', '22:00'], '5': ['14:00', '23:00'], '6': ['14:00', '23:00'] } }],
+      bairros: [{ id: 1, nome: 'Boa Vista 2', taxa: 3, ativo: true, ordem: 0 }, { id: 2, nome: 'Boa Vista 1', taxa: 4, ativo: true, ordem: 1 }, { id: 3, nome: 'Centro (Novo Gama)', taxa: 6, ativo: true, ordem: 2 }, { id: 4, nome: 'Pedregal', taxa: 8, ativo: false, ordem: 3 }],
+      destaques: [{ id: 'd1', titulo: 'Novo sabor: Pistache', texto: 'Só esta semana, em todos os tamanhos', midia_url: 'img/g3.jpg', tipo: 'foto', botao_texto: 'Quero provar', botao_link: '#montar', ativo: true, ordem: 0, inicio: null, fim: null, criado_em: hoje },
+        { id: 'd2', titulo: 'Combo família', texto: '2 copos de 500 ml com desconto', midia_url: 'video/frutas.mp4', tipo: 'video', botao_texto: null, botao_link: null, ativo: false, ordem: 1, inicio: null, fim: null, criado_em: hoje }],
+      itens_esgotados: [{ item_id: 'demo', nome: 'Morango (exemplo)' }]
+    };
+    let nid = 100;
+    const q = t => {
+      let filtros = [], op = 'select', val = null, single = false;
+      const b = {
+        select() { return b }, order() { return b }, single() { single = true; return b },
+        eq(c, v) { filtros.push(r => String(r[c]) === String(v)); return b }, neq(c, v) { filtros.push(r => String(r[c]) !== String(v)); return b },
+        update(v) { op = 'update'; val = v; return b }, insert(v) { op = 'insert'; val = v; return b }, upsert(v) { op = 'upsert'; val = v; return b }, delete() { op = 'delete'; return b },
+        then(res) {
+          const L = T[t] = T[t] || [], ok = r => filtros.every(f => f(r)), arr = v => Array.isArray(v) ? v : [v];
+          if (op === 'update') L.filter(ok).forEach(r => Object.assign(r, val));
+          if (op === 'insert') arr(val).forEach(v => L.push({ id: 'n' + (++nid), criado_em: new Date().toISOString(), ...v }));
+          if (op === 'upsert') arr(val).forEach(v => { const k = v.id !== undefined ? L.find(r => r.id === v.id) : v.item_id !== undefined ? L.find(r => r.item_id === v.item_id) : null; k ? Object.assign(k, v) : L.push({ ...v }); });
+          if (op === 'delete') T[t] = L.filter(r => !ok(r));
+          let d = JSON.parse(JSON.stringify(T[t].filter(ok)));
+          if ('ordem' in (d[0] || {})) d.sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0));
+          res({ data: op === 'select' ? (single ? d[0] : d) : null, error: null });
+        }
+      };
+      return b;
+    };
+    const urls = {};
+    return { from: q, storage: { from: () => ({ upload: async (cam, blob) => { urls[cam] = URL.createObjectURL(blob); return { error: null }; }, getPublicUrl: cam => ({ data: { publicUrl: urls[cam] || 'img/logo.png' } }), remove: async () => ({ error: null }) }) } };
+  }
+  function ofereceDemo() {
+    if (location.hash !== '#painel' || window.API_ONLINE || document.getElementById('tab-agencia') || !window.PAINEL_PAPEL) return;
+    const nav = document.querySelector('.al-tabs'); if (!nav || nav.querySelector('[data-t=agdemo]')) return;
+    nav.insertAdjacentHTML('beforeend', '<button data-t="agdemo">🎯 Agência (demo)</button>');
+    nav.querySelector('[data-t=agdemo]').onclick = ev => {
+      ev.stopPropagation(); ev.target.remove(); window.AGENCIA_DEMO = true;
+      PAINEL_PAPEL({ papel: 'agencia' }, bancoDemo());
+      setTimeout(() => document.querySelector('.al-tabs [data-t=agencia]')?.click(), 50);
+    };
+  }
+  addEventListener('hashchange', () => setTimeout(ofereceDemo, 1500));
+  addEventListener('load', () => setTimeout(ofereceDemo, 1500));
   window.AGENCIA_TESTE = { estado: () => ({ S, R, atual }), abre };
 })();

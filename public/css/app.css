@@ -723,3 +723,5 @@ select.ag-in{appearance:auto}
   .ag-save{flex-wrap:wrap;bottom:calc(10px + env(safe-area-inset-bottom))}.ag-save span{flex-basis:100%}.ag-save button{flex:1;justify-content:center}
   .ag-test{flex-wrap:wrap}
 }
+
+.ag-demo{background:#ffb84d1a;border:1px solid #ffb84d55;color:#ffe2b0;border-radius:14px;padding:10px 14px;margin-bottom:14px;font:500 13px/1.5 Poppins,sans-serif;text-align:left}.ag-demo b{color:#fff}
