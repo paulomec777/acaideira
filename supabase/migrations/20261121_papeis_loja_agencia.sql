@@ -1,5 +1,6 @@
 -- Dois papéis: 'loja' (dia a dia) e 'agencia' (marketing e configurações).
 update public.equipe set papel = 'loja' where papel is distinct from 'agencia';
+alter table public.equipe drop constraint if exists equipe_papel_check;
 alter table public.equipe alter column papel set default 'loja';
 alter table public.equipe add constraint equipe_papel_valido check (papel in ('loja','agencia'));
 
