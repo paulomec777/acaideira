@@ -4,7 +4,7 @@
   "description": "Site de pedidos da Açaideira Sorvete & Açaí: montador de copo, checkout com Pix/Mercado Pago e painel da loja em tempo real.",
   "main": "server.js",
   "scripts": { "start": "node server.js" },
-  "engines": { "node": ">=20" },
+  "engines": { "node": ">=22" },
   "license": "UNLICENSED",
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",
