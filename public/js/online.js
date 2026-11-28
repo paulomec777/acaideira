@@ -26,10 +26,10 @@
     if (!API) return;
     const av = document.querySelector('#dBody .aviso');
     if (av) av.innerHTML = API.pagamentoOnline
-      ? '🔒 Pix e cartão online pelo <b>Mercado Pago</b>. O pedido é confirmado automaticamente quando o pagamento cair.'
-      : '🔒 Pagamento online: a loja envia o Pix ou o link do Mercado Pago no seu WhatsApp.';
+      ? ICO.cadeado + 'Pix e cartão online pelo <b>Mercado Pago</b>. O pedido é confirmado automaticamente quando o pagamento cair.'
+      : ICO.cadeado + 'Pagamento online: a loja envia o Pix ou o link do Mercado Pago no seu WhatsApp.';
     if (!API.aberto) {
-      const e = $id('f-err'); e.textContent = '🌙 A loja está fechada agora. Você pode montar seu pedido, mas só consegue enviar no horário de funcionamento.'; e.style.display = 'block';
+      const e = $id('f-err'); e.textContent = 'A loja está fechada agora. Você pode montar seu pedido, mas só consegue enviar no horário de funcionamento.'; e.style.display = 'block';
     }
   };
   function codigoPagamento() {
@@ -63,20 +63,20 @@
       html += `<div class="pix"><b>Pague com Pix para confirmar</b>
         ${j.pix.qrBase64 ? `<img class="qrimg" src="data:image/png;base64,${j.pix.qrBase64}" alt="QR Code Pix">` : ''}
         <div class="pixval">${brl(j.total)}</div>
-        <button class="btn sec" type="button" id="copiaPix">📋 Copiar código Pix (copia e cola)</button>
+        <button class="btn sec" type="button" id="copiaPix">${ICO.copiar}Copiar código Pix (copia e cola)</button>
         <small class="pixnome">O código vale ${Math.round((new Date(j.pix.expiraEm) - Date.now()) / 60000)} minutos. Quando o pagamento cair, seu pedido é confirmado <b>sozinho</b>.</small></div>`;
     } else if (j.linkPagamento) {
       html += `<div class="pix"><b>Pague com cartão para confirmar</b><div class="pixval">${brl(j.total)}</div>
-        <a class="btn verde" href="${esc(j.linkPagamento)}" target="_blank" rel="noopener">💳 Pagar no Mercado Pago</a>
+        <a class="btn verde" href="${esc(j.linkPagamento)}" target="_blank" rel="noopener">${ICO.cartao}Pagar no Mercado Pago</a>
         <small class="pixnome">Página segura do Mercado Pago. Seu pedido é confirmado assim que o pagamento for aprovado.</small></div>`;
     } else {
-      html += `<div class="ok"><div class="big">💜</div><h3>Pedido recebido!</h3><p class="ok-p">${ck.pag === 'pix' || ck.pag === 'mp' ? 'A loja vai te enviar o pagamento no WhatsApp.' : 'A loja já está com seu pedido.'} ${ck.modo === 'entrega' ? 'Previsão: ' + LOJA.tempoEntrega + '.' : 'Fica pronto em cerca de ' + LOJA.tempoRetirada + '.'}</p></div>`;
+      html += `<div class="ok"><div class="big">${ICO.coracao}</div><h3>Pedido recebido!</h3><p class="ok-p">${ck.pag === 'pix' || ck.pag === 'mp' ? 'A loja vai te enviar o pagamento no WhatsApp.' : 'A loja já está com seu pedido.'} ${ck.modo === 'entrega' ? 'Previsão: ' + LOJA.tempoEntrega + '.' : 'Fica pronto em cerca de ' + LOJA.tempoRetirada + '.'}</p></div>`;
     }
-    if (ck.modo === 'entrega') html += `<div class="aviso">🔐 Seu <b>código de entrega</b> é <b style="font-size:18px">${esc(j.codigoEntrega)}</b>. Informe ao motoboy quando ele chegar.</div>`;
+    if (ck.modo === 'entrega') html += `<div class="aviso">${ICO.cadeado}Seu <b>código de entrega</b> é <b style="font-size:18px">${esc(j.codigoEntrega)}</b>. Informe ao motoboy quando ele chegar.</div>`;
     html += `<div class="revisao"><div class="rv-h">Seu pedido</div><div class="rv-p">${esc(resumoSacola)}</div><div class="rv-i tot"><span>Total</span><b>${brl(j.total)}</b></div></div>`;
     $id('dBody').innerHTML = html;
     if (j.pix) $id('copiaPix').onclick = () => copiar(j.pix.copiaECola);
-    $id('dFoot').innerHTML = `<a class="btn" href="#pedido/${j.token}" onclick="fechar()">📍 Acompanhar meu pedido</a>`;
+    $id('dFoot').innerHTML = `<a class="btn" href="#pedido/${j.token}" onclick="fechar()">${ICO.pin}Acompanhar meu pedido</a>`;
   };
 
   // ---------- 3. Página "Acompanhe seu pedido" ----------

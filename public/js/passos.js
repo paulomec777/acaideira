@@ -28,7 +28,7 @@
   const _opt = opt;
   opt = function (el, list, isSel, onClick, extra) {
     const es = esg();
-    _opt(el, list, isSel, o => { if (es.has(o.id)) { toast('Esse item esgotou hoje 😕'); return; } onClick(o); }, o => (extra && extra(o)) || es.has(o.id));
+    _opt(el, list, isSel, o => { if (es.has(o.id)) { toast('Esse item esgotou hoje'); return; } onClick(o); }, o => (extra && extra(o)) || es.has(o.id));
     [...el.children].forEach((b, i) => { const o = list[i]; if (!o) return; b.dataset.id = o.id; if (es.has(o.id)) { b.dataset.esg = '1'; b.insertAdjacentHTML('beforeend', '<i class="esg-tag">ESGOTADO</i>'); } });
   };
 
@@ -133,7 +133,7 @@
       st.classList.toggle('pc-feito', f);
     });
     const fl = falta(), k = ETAPAS.findIndex(e => e.id === D.at);
-    E('pcEtTx').innerHTML = !fl.length ? '<em>Tudo pronto!</em> Confira e adicione à sacola 💜' : `<em>Etapa ${k + 1} de 6</em> · ${ETAPAS[k].dica}`;
+    E('pcEtTx').innerHTML = !fl.length ? '<em>Tudo pronto!</em> Confira e adicione à sacola' : `<em>Etapa ${k + 1} de 6</em> · ${ETAPAS[k].dica}`;
     E('pcProg').style.width = (nf / 6 * 100) + '%';
     E('pcChips').innerHTML = ETAPAS.map((e, i) => { const f = feito(e.id); return `<button type="button" data-s="${e.id}" class="${f ? 'ok' : ''} ${e.id === D.at ? 'at' : ''} ${!f && OBRIG[e.id] ? 'ob' : ''}"><i>${f ? '✓' : i + 1}</i>${e.nome}</button>`; }).join('');
     const a = E('addMontar'); a.classList.toggle('pc-off', fl.length > 0);
@@ -148,7 +148,7 @@
     if (fl.length) {
       D.at = fl[0].id; decora(); irPara(fl[0].id);
       const st = stepEl(fl[0].id); st.classList.remove('pc-erro'); void st.offsetWidth; st.classList.add('pc-erro');
-      toast('Falta escolher: ' + fl.map(e => e.nome).join(', ') + ' 💜'); return;
+      toast('Falta escolher: ' + fl.map(e => e.nome).join(', ')); return;
     }
     _add.call(this, ev);
     sel.base = null; sel.meio = []; sel.comps = []; sel.prem = []; sel.cob = 'nenhuma'; qtd = 1; D = novo(); render();

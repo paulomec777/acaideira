@@ -750,6 +750,9 @@ select.al-chip{appearance:auto;color:#fff;background:#2a1846}
 @media(max-width:700px){.so-pc{display:none!important}}
 </style>
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="efeitos/topo.css">
+<script>if(matchMedia('(min-width:701px)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&scrollY<40&&location.hash.length<2){document.documentElement.classList.add('ac-abrindo');setTimeout(function(){document.documentElement.classList.remove('ac-abrindo')},4000)}</script>
+<link rel="preload" as="image" href="img/copo-acai.webp">
 </head>
 <body>
 
@@ -767,9 +770,29 @@ select.al-chip{appearance:auto;color:#fff;background:#2a1846}
 
 <!-- CARDÁPIO -->
 <section class="view on" id="v-cardapio">
+  <section class="ac-hero" aria-label="Açaideira">
+    <div class="ac-faixa" aria-hidden="true"><div class="ac-faixa__trilho"><span>AÇAÍ DO PARÁ</span><i>✦</i><span>FEITO NA HORA</span><i>✦</i><span>14 SABORES DE AÇAÍ</span><i>✦</i><span>+30 COMPLEMENTOS</span><i>✦</i><span>DELIVERY E RETIRADA SEM FILA</span><i>✦</i><span>NOVO GAMA · GO</span><i>✦</i><span>AÇAÍ DO PARÁ</span><i>✦</i><span>FEITO NA HORA</span><i>✦</i><span>14 SABORES DE AÇAÍ</span><i>✦</i><span>+30 COMPLEMENTOS</span><i>✦</i><span>DELIVERY E RETIRADA SEM FILA</span><i>✦</i><span>NOVO GAMA · GO</span><i>✦</i><span>AÇAÍ DO PARÁ</span><i>✦</i><span>FEITO NA HORA</span><i>✦</i><span>14 SABORES DE AÇAÍ</span><i>✦</i><span>+30 COMPLEMENTOS</span><i>✦</i><span>DELIVERY E RETIRADA SEM FILA</span><i>✦</i><span>NOVO GAMA · GO</span><i>✦</i><span>AÇAÍ DO PARÁ</span><i>✦</i><span>FEITO NA HORA</span><i>✦</i><span>14 SABORES DE AÇAÍ</span><i>✦</i><span>+30 COMPLEMENTOS</span><i>✦</i><span>DELIVERY E RETIRADA SEM FILA</span><i>✦</i><span>NOVO GAMA · GO</span><i>✦</i></div></div>
+    <div class="ac-palco"><div class="ac-nome" data-nome="AÇAIDEIRA" data-foto="img/s2.jpg"><h1 class="ac-nome__reserva">AÇAIDEIRA</h1></div></div>
+    <div class="ac-cena">
+      <div class="ac-copo"><img src="img/copo-acai.webp" alt="Copo de açaí da Açaideira" width="470" height="876"></div>
+      <button type="button" class="ac-extra ac-extra--1" aria-label="Colocar Morango no copo"><img src="img/anim/morango.webp" alt=""></button>
+      <button type="button" class="ac-extra ac-extra--2" aria-label="Colocar Granola no copo"><img src="img/anim/granola.webp" alt=""></button>
+      <button type="button" class="ac-extra ac-extra--3" aria-label="Colocar Banana no copo"><img src="img/anim/banana.webp" alt=""></button>
+      <button type="button" class="ac-extra ac-extra--4" aria-label="Colocar Leite em pó no copo"><img src="img/anim/leite.webp" alt=""></button>
+      <button type="button" class="ac-extra ac-extra--5" aria-label="Colocar Amendoim no copo"><img src="img/anim/amendoim.webp" alt=""></button>
+      <button type="button" class="ac-extra ac-extra--6" aria-label="Colocar Uva no copo"><img src="img/anim/uva.webp" alt=""></button>
+    </div>
+    <div class="ac-base">
+      <div class="ac-esq">
+        <p class="ac-frase"><span class="ln"><span>Não é só açaí,</span></span><span class="ln"><span>é <em>Açaideira.</em></span></span></p>
+        <div class="ac-botoes"><button class="cta" onclick="document.getElementById('montar').scrollIntoView({behavior:'smooth'})">PEÇA AGORA</button><button class="cta ghost" onclick="document.getElementById('cardapio-real').scrollIntoView({behavior:'smooth'})">VER CARDÁPIO</button></div>
+      </div>
+      <div class="ac-info"><b>MONTE DO SEU JEITO</b><p>Boa Vista 2 · Novo Gama-GO<br>Delivery e retirada sem fila · Pix, cartão e dinheiro</p></div>
+    </div>
+  </section>
   <div class="hero">
     <div>
-    <h1 class="h-oak">NÃO É SÓ AÇAÍ,<br>É <span>AÇAIDEIRA.</span></h1>
+    <h2 class="h-oak">NÃO É SÓ AÇAÍ,<br>É <span>AÇAIDEIRA.</span></h2>
     <p>14 sabores de açaí, +30 complementos e o seu jeito de montar. Peça pelo site e receba em casa — ou retire na loja sem fila.</p>
     <div class="ctas"><button class="cta" onclick="document.getElementById('montar').scrollIntoView({behavior:'smooth'})">PEÇA AGORA</button><button class="cta ghost" onclick="document.getElementById('cardapio-real').scrollIntoView({behavior:'smooth'})">VER CARDÁPIO</button></div>
     <div class="info"><div>📍 Boa Vista 2 • Novo Gama-GO</div><div>🛵 Delivery</div><div>🏪 Retirada sem fila</div><div>💳 Pix • Cartão • Dinheiro</div></div>
@@ -832,7 +855,7 @@ select.al-chip{appearance:auto;color:#fff;background:#2a1846}
         <div class="step" style="margin-bottom:0"><h3><span class="n">6</span>Cobertura</h3><div class="opts" id="o-cob"></div></div>
       </div>
       <div class="card sticky">
-        <div class="copo"><div class="modo"><button type="button" data-m="a" class="on" onclick="setModo('a')">🥤 Ver copo</button><button type="button" data-m="d" onclick="setModo('d')">🔍 Ver por dentro</button></div><div class="stage" id="stage"><div class="brilhos"><i style="left:12%;top:22%"></i><i style="left:84%;top:30%;animation-delay:.8s"></i><i style="left:20%;top:62%;animation-delay:1.6s"></i><i style="left:78%;top:66%;animation-delay:2.2s"></i><i style="left:50%;top:6%;animation-delay:1.2s"></i><i style="left:90%;top:12%;animation-delay:2.6s"></i></div>
+        <div class="copo"><div class="modo"><button type="button" data-m="a" class="on" onclick="setModo('a')"><span class="i-sl" data-i="copo"></span>Ver copo</button><button type="button" data-m="d" onclick="setModo('d')"><span class="i-sl" data-i="olho"></span>Ver por dentro</button></div><div class="stage" id="stage"><div class="brilhos"><i style="left:12%;top:22%"></i><i style="left:84%;top:30%;animation-delay:.8s"></i><i style="left:20%;top:62%;animation-delay:1.6s"></i><i style="left:78%;top:66%;animation-delay:2.2s"></i><i style="left:50%;top:6%;animation-delay:1.2s"></i><i style="left:90%;top:12%;animation-delay:2.6s"></i></div>
           <div class="cupbox" id="cupbox"><svg id="copoSvg" viewBox="0 0 470 640"></svg><div class="toppers" id="toppers"></div><div class="fx" id="fx"></div></div>
           <div class="tam-label" id="tamLabel">500 ml</div>
         </div></div>
@@ -943,6 +966,7 @@ select.al-chip{appearance:auto;color:#fff;background:#2a1846}
 <div class="toast" id="toast"></div>
 <a class="wpp" href="https://wa.me/5561982022436" title="WhatsApp (61) 98202-2436">💬</a>
 
+<script src="js/icones.js"></script>
 <script src="js/qrcode.js"></script>
 <script src="js/catalogo.js"></script>
 <script>
@@ -1142,7 +1166,7 @@ function renderProntos(){let html='',cat='';PRONTOS.forEach((p,i)=>{if(p.cat!==c
  $('prontos').innerHTML=html}
 renderProntos();
 function addPronto(i){const p=PRONTOS[i],t=p.tam[selTam[i]];sacola.push({nome:p.nome+' '+t[0],det:p.desc,preco:t[1],qtd:1,ref:{tipo:'pronto',i,t:selTam[i]}});atualiza();toast('Adicionado à sacola 💜')}
-$('addMontar').onclick=()=>{if(!sel.base){toast('Escolha o sabor do açaí primeiro 💜');const s=o_base.querySelector('.stat');o_base.scrollIntoView({behavior:'smooth',block:'center'});if(s)s.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(-5px)'},{transform:'translateX(0)'}],{duration:450});return}const t=tam();const det=[BASES.find(b=>b.id===sel.base).nome,sel.meio.length?'No meio: '+sel.meio.map(id=>MEIO.find(m=>m.id===id).nome).join(' + '):null,...sel.comps.map(id=>COMPS.find(c=>c.id===id).nome),...sel.prem.map(id=>PREM.find(c=>c.id===id).nome),sel.cob!=='nenhuma'?COBS.find(c=>c.id===sel.cob).nome:null].filter(Boolean).join(', ');
+$('addMontar').onclick=()=>{if(!sel.base){toast('Escolha o sabor do açaí primeiro');const s=o_base.querySelector('.stat');o_base.scrollIntoView({behavior:'smooth',block:'center'});if(s)s.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(-5px)'},{transform:'translateX(0)'}],{duration:450});return}const t=tam();const det=[BASES.find(b=>b.id===sel.base).nome,sel.meio.length?'No meio: '+sel.meio.map(id=>MEIO.find(m=>m.id===id).nome).join(' + '):null,...sel.comps.map(id=>COMPS.find(c=>c.id===id).nome),...sel.prem.map(id=>PREM.find(c=>c.id===id).nome),sel.cob!=='nenhuma'?COBS.find(c=>c.id===sel.cob).nome:null].filter(Boolean).join(', ');
   sacola.push({nome:'Açaí '+t.ap+' '+t.nome,det,preco:precoMontar(),qtd,ref:{tipo:'montar',tam:sel.tam,base:sel.base,meio:[...sel.meio],comps:[...sel.comps],prem:[...sel.prem],cob:sel.cob}});qtd=1;sel.meio=[];sel.base=null;atualiza();render();toast('Seu açaí foi para a sacola 💜')};
 
 // ====== SACOLA / CHECKOUT ======
@@ -1154,7 +1178,7 @@ function fechar(){ $('ov').classList.remove('on');$('drawer').classList.remove('
 $('abrirCarrinho').onclick=abrir;$('fechar').onclick=fechar;$('ov').onclick=fechar;
 function telaSacola(){
   $('dTitulo').textContent='Sua sacola';
-  if(!sacola.length){$('dBody').innerHTML='<div class="vazio"><div style="font-size:48px">🥣</div>Sua sacola está vazia.<br>Que tal montar um açaí?</div>';$('dFoot').innerHTML='';return}
+  if(!sacola.length){$('dBody').innerHTML='<div class="vazio"><div style="font-size:48px">${ICO.copo}</div>Sua sacola está vazia.<br>Que tal montar um açaí?</div>';$('dFoot').innerHTML='';return}
   $('dBody').innerHTML=sacola.map((it,i)=>`<div class="item"><div><b>${it.qtd}× ${it.nome}</b><small>${it.det}</small><button class="rm" onclick="sacola.splice(${i},1);atualiza();telaSacola()">Remover</button></div><b>${brl(it.preco*it.qtd)}</b></div>`).join('');
   $('dFoot').innerHTML=`<div class="total"><span>Subtotal</span><span>${brl(sub())}</span></div><button class="btn" onclick="telaCheckout()">Continuar</button>`;
 }
@@ -1163,7 +1187,7 @@ function telaCheckout(){
   const ent=ck.modo==='entrega', loc=ent?'na entrega':'na loja';
   if(ck.pag==='cartao')ck.pag='mp';
   $('dBody').innerHTML=`
-   <div class="seg"><button data-m="entrega" class="${ent?'sel':''}">🛵 Entrega</button><button data-m="retirada" class="${!ent?'sel':''}">🏪 Retirar na loja</button></div>
+   <div class="seg"><button data-m="entrega" class="${ent?'sel':''}">${ICO.moto}Entrega</button><button data-m="retirada" class="${!ent?'sel':''}">${ICO.loja}Retirar na loja</button></div>
    <label>Seu nome</label><input class="in" id="f-nome" placeholder="Ex.: Maria" autocomplete="name">
    <label>Seu WhatsApp</label><input class="in" id="f-tel" placeholder="(61) 90000-0000" inputmode="tel" autocomplete="tel">
    <div id="f-end" style="display:${ent?'block':'none'}">
@@ -1173,9 +1197,9 @@ function telaCheckout(){
    </div>
    <label>Como você quer pagar?</label>
    <div class="pagopts">
-     <button data-p="pix" class="pagopt ${ck.pag==='pix'?'sel':''}"><b>⚡ Pix agora</b><span>${LOJA.pixChave?'QR Code e copia e cola aqui no site':'A loja envia a chave Pix no WhatsApp'}</span></button>
-     <button data-p="mp" class="pagopt ${ck.pag==='mp'?'sel':''}"><b>💳 Cartão online</b><span>Link seguro do Mercado Pago no seu WhatsApp</span></button>
-     <button data-p="local" class="pagopt ${ck.pag==='local'?'sel':''}"><b>${ent?'🛵':'🏪'} Pagar ${loc}</b><span>${ent?'Maquininha com o motoboy, Pix ou dinheiro':'Cartão, Pix ou dinheiro no balcão'}</span></button>
+     <button data-p="pix" class="pagopt ${ck.pag==='pix'?'sel':''}"><b>${ICO.pix}Pix agora</b><span>${LOJA.pixChave?'QR Code e copia e cola aqui no site':'A loja envia a chave Pix no WhatsApp'}</span></button>
+     <button data-p="mp" class="pagopt ${ck.pag==='mp'?'sel':''}"><b>${ICO.cartao}Cartão online</b><span>Link seguro do Mercado Pago no seu WhatsApp</span></button>
+     <button data-p="local" class="pagopt ${ck.pag==='local'?'sel':''}"><b>${ent?ICO.moto:ICO.loja}Pagar ${loc}</b><span>${ent?'Maquininha com o motoboy, Pix ou dinheiro':'Cartão, Pix ou dinheiro no balcão'}</span></button>
    </div>
    <div id="f-local" style="display:${ck.pag==='local'?'block':'none'}">
      <div class="seg" style="margin-top:10px">${[['cartao','Cartão'],['pix','Pix'],['dinheiro','Dinheiro']].map(([k,t])=>`<button data-l="${k}" class="${(ck.local||'cartao')===k?'sel':''}">${t}</button>`).join('')}</div>
@@ -1183,7 +1207,7 @@ function telaCheckout(){
    </div>
    <label>Observação (opcional)</label><textarea class="in" id="f-obs" rows="2" placeholder="Ex.: sem granola, tocar o interfone"></textarea>
    <div class="err" id="f-err"></div>
-   <div class="aviso">🔒 Pagamento online pelo <b>Mercado Pago</b>: os dados do cartão são digitados no site do Mercado Pago, nunca aqui.</div>`;
+   <div class="aviso">${ICO.cadeado}Pagamento online pelo <b>Mercado Pago</b>: os dados do cartão são digitados no site do Mercado Pago, nunca aqui.</div>`;
   $('dBody').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ck.modo=b.dataset.m;salvaCampos();telaCheckout()});
   $('dBody').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ck.pag=b.dataset.p;if(ck.pag==='local'&&!ck.local)ck.local='cartao';salvaCampos();telaCheckout()});
   $('dBody').querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{ck.local=b.dataset.l;salvaCampos();telaCheckout()});
@@ -1234,18 +1258,18 @@ function confirmar(){
   if(ck.pag==='pix'&&LOJA.pixChave){
     const code=pixPayload(total,'PED'+cod);ck.pixCode=code;
     html+=`<div class="pix"><b>1. Pague com Pix</b><div class="qrbox" id="qrbox"></div><div class="pixval">${brl(total)}</div>
-      <button class="btn sec" id="copiaPix" type="button">📋 Copiar código Pix (copia e cola)</button>
+      <button class="btn sec" id="copiaPix" type="button">${ICO.copiar}Copiar código Pix (copia e cola)</button>
       <small class="pixnome">Recebedor: ${LOJA.pixNome} · confira o nome antes de pagar</small></div>
       <p class="passo2"><b>2. Envie o pedido</b> no WhatsApp e mande o comprovante na mesma conversa.</p>`;
   }else if(ck.pag==='pix'){
-    html+=`<div class="aviso">⚡ Assim que você enviar o pedido, a loja responde no WhatsApp com a chave Pix.</div>`;
+    html+=`<div class="aviso">${ICO.pix}Assim que você enviar o pedido, a loja responde no WhatsApp com a chave Pix.</div>`;
   }else if(ck.pag==='mp'){
-    html+=`<div class="aviso">💳 Assim que você enviar o pedido, a loja responde no WhatsApp com o <b>link seguro do Mercado Pago</b> no valor de ${brl(total)}. É só tocar e pagar com cartão.</div>`;
+    html+=`<div class="aviso">${ICO.cartao}Assim que você enviar o pedido, a loja responde no WhatsApp com o <b>link seguro do Mercado Pago</b> no valor de ${brl(total)}. É só tocar e pagar com cartão.</div>`;
   }
   html+=`<div class="revisao"><div class="rv-h">Seu pedido</div>${sacola.map(i=>`<div class="rv-i"><span>${i.qtd}× ${i.nome}</span><b>${brl(i.preco*i.qtd)}</b></div>`).join('')}
    <div class="rv-i"><span>${ck.modo==='entrega'?'Entrega · '+ck.bairro:'Retirada na loja'}</span><b>${ck.modo==='entrega'?brl(taxa()):'Grátis'}</b></div>
    <div class="rv-i tot"><span>Total</span><b>${brl(total)}</b></div>
-   <div class="rv-p">💰 ${pagTexto()}</div>${ck.modo==='entrega'?`<div class="rv-p">📍 ${ck.rua}</div>`:''}</div>`;
+   <div class="rv-p">${ICO.cartao}${pagTexto()}</div>${ck.modo==='entrega'?`<div class="rv-p">${ICO.pin}${ck.rua}</div>`:''}</div>`;
   $('dBody').innerHTML=html;
   if($('qrbox')){try{const q=qrcode(0,'M');q.addData(ck.pixCode);q.make();$('qrbox').innerHTML=q.createSvgTag({cellSize:5,margin:2,scalable:true})}catch(e){$('qrbox').textContent='Use o copia e cola abaixo'}
     $('copiaPix').onclick=()=>copiar(ck.pixCode)}
@@ -1254,7 +1278,7 @@ function confirmar(){
   $('enviaWpp').onclick=()=>setTimeout(()=>finaliza(cod,total),400);
 }
 function copiar(t){
-  const ok=()=>toast('Código Pix copiado ✅');
+  const ok=()=>toast('Código Pix copiado');
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,()=>copiaVelho(t,ok));else copiaVelho(t,ok);
 }
 function copiaVelho(t,ok){const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){prompt('Copie o código Pix:',t)}a.remove()}
@@ -1262,7 +1286,7 @@ function finaliza(cod,total){
   const p={num:cod,cliente:ck.nome,tel:ck.tel,modo:ck.modo,bairro:ck.bairro,rua:ck.rua,ref:ck.ref,obs:ck.obs,itens:sacola.map(i=>({...i})),total,pagTxt:pagTexto(),st:'novo',hora:new Date()};
   pedidos.unshift(p);salvaPed();sacola=[];atualiza();renderPainel();
   $('dTitulo').textContent='Quase lá!';
-  $('dBody').innerHTML=`<div class="ok"><div class="big">💜</div><h3>Pedido #${cod} pronto no WhatsApp</h3><p class="ok-p">Confira a mensagem e toque em <b>enviar</b> no WhatsApp. A loja confirma por lá${ck.modo==='entrega'?` e entrega em ${LOJA.tempoEntrega}`:` e avisa quando estiver pronto (cerca de ${LOJA.tempoRetirada})`}.</p>
+  $('dBody').innerHTML=`<div class="ok"><div class="big">${ICO.coracao}</div><h3>Pedido #${cod} pronto no WhatsApp</h3><p class="ok-p">Confira a mensagem e toque em <b>enviar</b> no WhatsApp. A loja confirma por lá${ck.modo==='entrega'?` e entrega em ${LOJA.tempoEntrega}`:` e avisa quando estiver pronto (cerca de ${LOJA.tempoRetirada})`}.</p>
    <p class="ok-p">O WhatsApp não abriu? <a href="https://wa.me/${LOJA.whats}" target="_blank" rel="noopener">Toque aqui</a>.</p></div>`;
   $('dFoot').innerHTML=`<button class="btn" onclick="fechar()">Voltar ao cardápio</button>`;
 }
@@ -1410,7 +1434,7 @@ render();renderPainel();rota();
     img.classList.add('troca');setTimeout(()=>{img.style.backgroundImage=`url(img/sab/${f.id}.jpg)`;img.classList.remove('troca')},220);
     const b=(typeof BASES!=='undefined'&&BASES.find(x=>x.id===f.id));$s('sw-nome').textContent=b?b.nome.replace(' (Tradicional)',''):f.w;$s('sw-desc').textContent=f.d;
     $s('sw-n').textContent=String(i+1).padStart(2,'0');[...dots.children].forEach((d,k)=>d.classList.toggle('on',k===i));
-    $s('sw-btn').onclick=()=>{sel.base=f.id;render();document.getElementById('montar').scrollIntoView({behavior:'smooth'});toast('Sabor escolhido: '+($s('sw-nome').textContent)+' 💜')};
+    $s('sw-btn').onclick=()=>{sel.base=f.id;render();document.getElementById('montar').scrollIntoView({behavior:'smooth'});toast('Sabor escolhido: '+($s('sw-nome').textContent)+'')};
     st.dataset.sabor=f.id;
   }
   let tick=false;
@@ -1427,5 +1451,6 @@ render();renderPainel();rota();
 <script src="js/papeis.js"></script>
 <script src="js/app.js"></script>
 <script src="js/passos.js"></script>
+<script type="module" src="efeitos/topo.js"></script>
 </body>
 </html>

@@ -63,10 +63,11 @@
   <h1>NÃO É SÓ AÇAÍ,<br>É <span>AÇAIDEIRA.</span></h1>
   <p>14 sabores de açaí, +30 complementos e o seu jeito de montar. Peça aqui e receba em casa, ou retire sem fila.</p>
   <div class="ap-ctas"><button class="ap-cta v" onclick="APP_.montar()">MONTE O SEU</button><button class="ap-cta o" onclick="APP_.vaiPara('ap-s-dest')">CARDÁPIO</button></div>
-  <div class="ap-info"><span>🛵 Delivery</span><span>🏪 Retirada sem fila</span><span>⚡ Pix · Cartão · Dinheiro</span></div></div>
+  <div class="ap-info"><span>${ICO.moto}Delivery</span><span>${ICO.loja}Retirada sem fila</span><span>${ICO.pix}Pix · Cartão · Dinheiro</span></div></div>
 </header>
 <div class="ap-stories" id="apStories"></div>
 <div class="ap-modo"><div class="ap-seg" id="apModo"></div></div>
+<div id="apDeNovo"></div>
 <div class="ap-tick"><div>${[...tick, ...tick].map(t => `<span>${t}</span><span>✦</span>`).join('')}</div></div>
 <nav class="ap-tabs" id="apTabs"><button data-s="ap-s-dest" class="on">Destaques</button><button data-s="ap-s-monte">Monte o seu</button><button data-s="ap-s-sab">Sabores</button>${cats.map(c => `<button data-s="ap-s-${slug(c)}">${esc(c.replace('Açaídeiras ', ''))}</button>`).join('')}<button data-s="ap-s-loja">A loja</button></nav>
 
@@ -85,14 +86,20 @@
 ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h ap-rv"><h2>${esc(c.replace('Açaídeiras ', ''))}</h2><small>${PRONTOS.filter(p => p.cat === c).length} opções</small></div><div class="ap-list">${PRONTOS.map((p, i) => p.cat === c ? linhaProduto(p, i) : '').join('')}</div></section>`).join('')}
 
 <section class="ap-sec" id="ap-s-loja"><div class="ap-h ap-rv"><h2>A loja</h2></div><div class="ap-loja ap-rv">${infoLoja()}</div></section>
-<div class="ap-rod"><b>AÇAIDEIRA</b>Sorvete &amp; Açaí · Seu momento mais gostoso começa aqui 💜<br><a href="${IG}" target="_blank" rel="noopener">@acaideira.sorvete.acai</a> · <a href="#painel">🔒 Área da loja</a></div>
+<div class="ap-rod"><b>AÇAIDEIRA</b>Sorvete &amp; Açaí · Seu momento mais gostoso começa aqui<br><a href="${IG}" target="_blank" rel="noopener">@acaideira.sorvete.acai</a></div>
 
 <button class="ap-cart" id="apCart" onclick="abrir()"><span class="q" id="apCartQ">0</span><b>VER SACOLA</b><span id="apCartT">R$ 0,00</span></button>
 <nav class="ap-nav" id="apNav"><button data-a="inicio" class="on">${IC.casa}Início</button><button data-a="busca">${IC.busca}Buscar</button><button data-a="pedidos">${IC.pedidos}Pedidos<span class="bd" id="apPedBd" hidden></span></button><button data-a="sacola">${IC.sacola}Sacola<span class="bd" id="apSacBd" hidden></span></button></nav>
 <div class="ap-pg" id="apProd"></div><div class="ap-pg" id="apMont"></div><div class="ap-pg tb" id="apTab"></div><div class="ap-sv" id="apSv"></div>`;
     v.prepend(app);
     interacoes();
-    renderStories(); renderModo(); cartBar(); statusLoja();
+    renderStories(); renderModo(); cartBar(); statusLoja(); deNovo();
+    // entrada discreta da loja: segurar o nome "Açaídeira" no topo por 2 segundos
+    const logo = app.querySelector('.ap-logo'); let seg = 0;
+    const solta = () => clearTimeout(seg);
+    logo.addEventListener('pointerdown', () => { solta(); seg = setTimeout(() => { vibra([10, 30, 10]); location.hash = '#painel'; }, 2000); });
+    ['pointerup', 'pointerleave', 'pointercancel', 'pointermove'].forEach(ev => logo.addEventListener(ev, e => { if (ev !== 'pointermove' || Math.abs(e.movementX) + Math.abs(e.movementY) > 6) solta(); }));
+    logo.addEventListener('contextmenu', e => e.preventDefault());
   }
 
   function interacoes() {
@@ -126,11 +133,11 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
   function vaiPara(id) { const s = E(id); if (s) scrollTo({ top: s.getBoundingClientRect().top + scrollY - 108, behavior: 'smooth' }); }
 
   function infoLoja() {
-    return `<a class="ap-ln" href="${MAPA}" target="_blank" rel="noopener"><i>📍</i><div><b>Endereço</b><small>${ENDERECO}</small></div></a>
-<a class="ap-ln" href="https://wa.me/${LOJA.whats}" target="_blank" rel="noopener"><i>💬</i><div><b>WhatsApp</b><small>(61) 98202-2436 · dúvidas e acompanhamento do pedido</small></div></a>
-<div class="ap-ln"><i>🛵</i><div><b>Entrega e retirada</b><small>Entrega em ${esc(LOJA.tempoEntrega)} · retirada em cerca de ${esc(LOJA.tempoRetirada)}, sem fila</small></div></div>
-<div class="ap-ln"><i>💳</i><div><b>Pagamento</b><small>Pix, cartão online (Mercado Pago) ou cartão, Pix e dinheiro na entrega</small></div></div>
-<div class="ap-ln"><i>⚠️</i><div><b>Alérgenos</b><small>Alguns produtos podem conter leite, amendoim, castanhas, soja e glúten, e pode haver contato cruzado. Tem alergia? Fale com a gente antes de pedir.</small></div></div>`;
+    return `<a class="ap-ln" href="${MAPA}" target="_blank" rel="noopener"><i>${ICO.pin}</i><div><b>Endereço</b><small>${ENDERECO}</small></div></a>
+<a class="ap-ln" href="https://wa.me/${LOJA.whats}" target="_blank" rel="noopener"><i>${ICO.chat}</i><div><b>WhatsApp</b><small>(61) 98202-2436 · dúvidas e acompanhamento do pedido</small></div></a>
+<div class="ap-ln"><i>${ICO.moto}</i><div><b>Entrega e retirada</b><small>Entrega em ${esc(LOJA.tempoEntrega)} · retirada em cerca de ${esc(LOJA.tempoRetirada)}, sem fila</small></div></div>
+<div class="ap-ln"><i>${ICO.cartao}</i><div><b>Pagamento</b><small>Pix, cartão online (Mercado Pago) ou cartão, Pix e dinheiro na entrega</small></div></div>
+<div class="ap-ln"><i>${ICO.alerta}</i><div><b>Alérgenos</b><small>Alguns produtos podem conter leite, amendoim, castanhas, soja e glúten, e pode haver contato cruzado. Tem alergia? Fale com a gente antes de pedir.</small></div></div>`;
   }
   function statusLoja() {
     const c = window.API_ONLINE, ch = E('apChip'); if (!c || !ch || ch.dataset.ok) return;
@@ -140,7 +147,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     const b = E('apModo'); if (!b) return;
     const tx = BAIRROS.map(x => x.t).filter(t => t > 0), tmin = tx.length ? Math.min(...tx) : 0;
     b.classList.toggle('r', ck.modo === 'retirada');
-    b.innerHTML = `<span class="ind"></span><button data-m="entrega" class="${ck.modo === 'entrega' ? 'on' : ''}"><b>🛵 Entrega</b><small>${esc(LOJA.tempoEntrega)}${tmin ? ' · ' + brl(tmin) + '+' : ''}</small></button><button data-m="retirada" class="${ck.modo === 'retirada' ? 'on' : ''}"><b>🏪 Retirada</b><small>${esc(LOJA.tempoRetirada)} · grátis</small></button>`;
+    b.innerHTML = `<span class="ind"></span><button data-m="entrega" class="${ck.modo === 'entrega' ? 'on' : ''}"><b>${ICO.moto}Entrega</b><small>${esc(LOJA.tempoEntrega)}${tmin ? ' · ' + brl(tmin) + '+' : ''}</small></button><button data-m="retirada" class="${ck.modo === 'retirada' ? 'on' : ''}"><b>${ICO.loja}Retirada</b><small>${esc(LOJA.tempoRetirada)} · grátis</small></button>`;
     b.querySelectorAll('button').forEach(x => x.onclick = () => { if (ck.modo === x.dataset.m) return; ck.modo = x.dataset.m; vibra(); b.classList.toggle('r', ck.modo === 'retirada'); b.querySelectorAll('button').forEach(y => y.classList.toggle('on', y === x)); });
   }
 
@@ -229,7 +236,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       const t = e.target.closest('[data-o]'); if (!t) return;
       const [tipo, id] = t.dataset.o.split(':'), lim = TAMANHOS.find(x => x.id === sel.tam).lim;
       const tog = (arr, max) => { const k = arr.indexOf(id); if (k >= 0) { arr.splice(k, 1); return true; } if (max && arr.length >= max) { toast(`Máximo de ${max}: desmarque um para trocar`); vibra([10, 40, 10]); return false; } arr.push(id); return true; };
-      if (['base', 'meio', 'comp', 'prem'].includes(tipo) && window.ITEM_ESGOTADO && ITEM_ESGOTADO(id)) { toast('Esse item esgotou hoje 😕'); vibra([10, 40, 10]); return; }
+      if (['base', 'meio', 'comp', 'prem'].includes(tipo) && window.ITEM_ESGOTADO && ITEM_ESGOTADO(id)) { toast('Esse item esgotou hoje'); vibra([10, 40, 10]); return; }
       if (tipo === 'nao') { MO.nao[id] = true; if (id === 'meio') sel.meio = []; else sel.prem = []; vibra(); atualizaMontar(); avancar(id === 'meio' ? 'mt-meio' : 'mt-prem'); return; }
       if (tipo === 'tam') { sel.tam = id; MO.tamOk = true; }
       else if (tipo === 'base') sel.base = id;
@@ -273,16 +280,16 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
   }
   function marcaEtapa(at) {
     const k = ETAPAS.findIndex(e => e[0] === at);
-    E('apEtTx').innerHTML = at === 'mt-fim' ? (falta().length ? `<em>Falta:</em> ${falta().map(e => e[1]).join(', ')}` : '<em>Tudo pronto!</em> Revise e adicione à sacola 💜') : `<em>Etapa ${k + 1} de 6</em> · ${ETAPAS[k][2]}`;
+    E('apEtTx').innerHTML = at === 'mt-fim' ? (falta().length ? `<em>Falta:</em> ${falta().map(e => e[1]).join(', ')}` : '<em>Tudo pronto!</em> Revise e adicione à sacola') : `<em>Etapa ${k + 1} de 6</em> · ${ETAPAS[k][2]}`;
     document.querySelectorAll('#apMlist .ap-etp, #mt-fim').forEach(s => s.classList.toggle('foco', s.dataset.e === at || s.id === at));
     E('apSteps').querySelectorAll('button').forEach(b => { const on = b.dataset.s === at; if (on && !b.classList.contains('at')) b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); b.classList.toggle('at', on); });
   }
-  const tile = (o, foto, ico, nome, subt, cls) => `<button class="ap-t ${cls || ''}" data-o="${o}">${foto ? `<img src="${foto}" alt="" loading="lazy">` : `<span class="ico">${ico || '✨'}</span>`}<span class="ck"></span><span class="nm"><b>${esc(nome)}</b>${subt ? `<small>${subt}</small>` : ''}</span></button>`;
+  const tile = (o, foto, ico, nome, subt, cls) => `<button class="ap-t ${cls || ''}" data-o="${o}">${foto ? `<img src="${foto}" alt="" loading="lazy">` : `<span class="ico">${ico === 'x' ? ICO.x : ICO.brilho}</span>`}<span class="ck"></span><span class="nm"><b>${esc(nome)}</b>${subt ? `<small>${subt}</small>` : ''}</span></button>`;
   const cab = (id, t, s, badgeId) => { const n = ETAPAS.findIndex(e => e[0] === id) + 1; return `<div class="ap-sh" id="${id}"><div><small class="ap-et">ETAPA ${n} DE 6</small><b><span class="ap-n">${n}</span>${t}</b><small id="${id}-s">${s}</small></div><span class="ap-req" id="${badgeId}"></span></div>`; };
   const etp = (id, html, comBotao) => `<section class="ap-etp" data-e="${id}">${html}${comBotao ? `<button class="ap-next go" data-nx="${id}" id="nx-${id}" hidden></button>` : ''}</section>`;
-  const naoQuero = qual => tile('nao:' + qual, null, '🙅', 'Não quero', 'PULAR ETAPA', 'nao');
+  const naoQuero = qual => tile('nao:' + qual, null, 'x', 'Não quero', 'PULAR ETAPA', 'nao');
   function listaMontar() {
-    const gruposC = [['fruta', '🍓 Frutas frescas'], ['fini', '🍬 Linha Fini'], [undefined, '✨ Crocantes e doces']];
+    const gruposC = [['fruta', 'Frutas frescas'], ['fini', 'Linha Fini'], [undefined, 'Crocantes e doces']];
     return etp('mt-tam', cab('mt-tam', 'Tamanho', 'Escolha 1 · obrigatório', 'bTam') +
       `<div class="ap-tams">${TAMANHOS.map(t => `<button class="ap-tam" data-o="tam:${t.id}"><span class="cp">${copoMini(t.nome, t.h)}</span><span><b>${t.ap}</b><small>${t.nome} · até ${t.lim} compl. grátis</small><em>${brl(t.preco)}</em></span></button>`).join('')}</div>`) +
       etp('mt-base', cab('mt-base', 'Sabor do açaí', 'Escolha 1 · obrigatório', 'bBase') +
@@ -295,7 +302,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
       etp('mt-prem', cab('mt-prem', 'Cremes e extras', 'Quantos quiser · cobrados à parte · ou “Não quero”', 'bPrem') +
       `<div class="ap-grid">${naoQuero('prem')}${PREM.map(p => tile('prem:' + p.id, `img/extra/${p.id}.jpg`, p.ico, p.nome, '+ ' + brl(p.preco))).join('')}</div>`, 1) +
       etp('mt-cob', cab('mt-cob', 'Cobertura', 'Escolha 1 · grátis · obrigatório', 'bCob') +
-      `<div class="ap-grid">${COBS.map(c => tile('cob:' + c.id, c.id !== 'nenhuma' ? `img/cob/${c.id}.jpg` : null, '🚫', c.nome, c.id === 'nenhuma' ? 'SÓ AÇAÍ' : 'GRÁTIS')).join('')}</div>`);
+      `<div class="ap-grid">${COBS.map(c => tile('cob:' + c.id, c.id !== 'nenhuma' ? `img/cob/${c.id}.jpg` : null, 'x', c.nome, c.id === 'nenhuma' ? 'SÓ AÇAÍ' : 'GRÁTIS')).join('')}</div>`);
   }
   function badge(id, cls, txt) { const b = E(id); if (b) { b.className = 'ap-req ' + cls; b.textContent = txt; } }
   function atualizaMontar(semCopo) {
@@ -330,7 +337,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
   }
   function addMontarApp() {
     const fl = falta();
-    if (fl.length) { const id = fl[0][0]; irPara(id); const h = E(id); h.classList.remove('erro'); void h.offsetWidth; h.classList.add('erro'); toast(`Falta escolher: ${fl.map(e => e[1]).join(', ')} 💜`); vibra([10, 40, 10]); return; }
+    if (fl.length) { const id = fl[0][0]; irPara(id); const h = E(id); h.classList.remove('erro'); void h.offsetWidth; h.classList.add('erro'); toast(`Falta escolher: ${fl.map(e => e[1]).join(', ')}`); vibra([10, 40, 10]); return; }
     const t = TAMANHOS.find(x => x.id === sel.tam);
     const det = [BASES.find(b => b.id === sel.base).nome, sel.meio.length ? 'No meio: ' + sel.meio.map(id => MEIO.find(m => m.id === id).nome).join(' + ') : null, ...sel.comps.map(id => COMPS.find(c => c.id === id).nome), ...sel.prem.map(id => PREM.find(c => c.id === id).nome), sel.cob !== 'nenhuma' ? COBS.find(c => c.id === sel.cob).nome : null, MO.obs.trim() ? 'Obs: ' + MO.obs.trim() : null].filter(Boolean).join(', ');
     const base = sel.base, r = (document.querySelector('#apCupw .cupbox') || E('apCupw')).getBoundingClientRect();
@@ -350,13 +357,13 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     if (!APP()) return _telaSacola();
     E('dTitulo').textContent = 'Sua sacola';
     if (!sacola.length) {
-      E('dBody').innerHTML = `<div class="ap-vz" style="padding-top:90px"><big>🥣</big><b>Sua sacola está vazia</b><br>Que tal montar um açaí do seu jeito?</div>`;
+      E('dBody').innerHTML = `<div class="ap-vz" style="padding-top:90px"><big>${ICO.copo}</big><b>Sua sacola está vazia</b><br>Que tal montar um açaí do seu jeito?</div>`;
       E('dFoot').innerHTML = `<button class="btn" onclick="fechar();setTimeout(()=>APP_.montar(),380)">MONTAR MEU AÇAÍ</button>`; return;
     }
     const naSacola = new Set(sacola.filter(i => i.ref && i.ref.tipo === 'pronto').map(i => i.ref.i));
     const sug = PRONTOS.map((p, i) => [p, i]).filter(([, i]) => !naSacola.has(i)).sort((a, b) => (b[0].tag ? 1 : 0) - (a[0].tag ? 1 : 0)).slice(0, 6);
-    E('dBody').innerHTML = `<div class="ap-sc-loja"><img src="img/logo.png" alt=""><div><b>Açaideira Sorvete &amp; Açaí</b><small>${ck.modo === 'entrega' ? '🛵 Entrega · ' + esc(LOJA.tempoEntrega) : '🏪 Retirada · ' + esc(LOJA.tempoRetirada)}</small></div></div>` +
-      sacola.map((it, i) => `<div class="ap-sc-it" style="animation-delay:${i * 50}ms"><div class="im"><img src="${fotoItem(it)}" alt=""></div><div class="tx"><b>${esc(it.nome)}</b><small>${esc(it.det || '')}</small><span class="pr">${brl(it.preco * it.qtd)}</span></div><div class="ap-qt"><button onclick="APP_.qtd(${i},-1)" aria-label="Diminuir">${it.qtd > 1 ? '−' : '🗑'}</button><b>${it.qtd}</b><button onclick="APP_.qtd(${i},1)" aria-label="Aumentar">+</button></div></div>`).join('') +
+    E('dBody').innerHTML = `<div class="ap-sc-loja"><img src="img/logo.png" alt=""><div><b>Açaideira Sorvete &amp; Açaí</b><small>${ck.modo === 'entrega' ? ICO.moto + 'Entrega · ' + esc(LOJA.tempoEntrega) : ICO.loja + 'Retirada · ' + esc(LOJA.tempoRetirada)}</small></div></div>` +
+      sacola.map((it, i) => `<div class="ap-sc-it" style="animation-delay:${i * 50}ms"><div class="im"><img src="${fotoItem(it)}" alt=""></div><div class="tx"><b>${esc(it.nome)}</b><small>${esc(it.det || '')}</small><span class="pr">${brl(it.preco * it.qtd)}</span></div><div class="ap-qt"><button onclick="APP_.qtd(${i},-1)" aria-label="Diminuir">${it.qtd > 1 ? '−' : ICO.lixo}</button><b>${it.qtd}</b><button onclick="APP_.qtd(${i},1)" aria-label="Aumentar">+</button></div></div>`).join('') +
       `<button class="ap-sc-mais" onclick="fechar()">+ Adicionar mais itens</button>` +
       (sug.length ? `<div class="ap-up"><h5>Peça também</h5><div class="row">${sug.map(([p, i]) => `<button onclick="fechar();setTimeout(()=>APP_.produto(${i}),380)"><img src="img/${p.img}.jpg" alt="" loading="lazy"><i>+</i><b>${esc(p.nome)}</b><span>${brl(minPreco(p))}</span></button>`).join('')}</div></div>` : '');
     E('dFoot').innerHTML = `<div class="resumo-linha"><span>Subtotal</span><span>${brl(sub())}</span></div><div class="resumo-linha"><span>Taxa de entrega</span><span>${ck.modo === 'retirada' ? 'Grátis' : 'pelo bairro, no próximo passo'}</span></div><div class="total"><span>TOTAL</span><span>${brl(sub() + (ck.modo === 'retirada' ? 0 : taxa()))}</span></div><button class="btn" onclick="telaCheckout()">CONTINUAR</button>`;
@@ -375,8 +382,18 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
   const _finaliza = finaliza;
   finaliza = function (cod, total) {
     try { const l = JSON.parse(localStorage.getItem('acaideira_meus') || '[]'); l.unshift({ c: cod, d: Date.now(), total, modo: ck.modo, itens: sacola.map(i => ({ ...i })) }); localStorage.setItem('acaideira_meus', JSON.stringify(l.slice(0, 10))); } catch (e) { }
+    try { deNovo(); } catch (e) { }
     _finaliza(cod, total); cartBar();
   };
+  // ---------- "Pedir de novo" no início: o último pedido do cliente, a um toque ----------
+  function deNovo() {
+    const box = E('apDeNovo'); if (!box) return;
+    const k = meus().findIndex(p => p.itens && p.itens.length), p = k >= 0 ? meus()[k] : null;
+    if (!p) { box.innerHTML = ''; return; }
+    const it = p.itens[0], mais = p.itens.length - 1, foto = (() => { try { return fotoItem(it); } catch (e) { return 'img/logo.png'; } })();
+    const quando = new Date(p.d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+    box.innerHTML = `<div class="ap-dn ap-rv vis"><div class="im"><img src="${foto}" alt=""></div><div class="tx"><small>SEU ÚLTIMO PEDIDO · ${esc(quando)}</small><b>${it.qtd}× ${esc(it.nome)}</b>${mais > 0 ? `<em>+ ${mais} ${mais > 1 ? 'itens' : 'item'}</em>` : ''}<span>${brl(p.total || 0)}</span></div><button onclick="APP_.repetir(${k})">Pedir de novo</button></div>`;
+  }
   function meus() { try { return JSON.parse(localStorage.getItem('acaideira_meus') || '[]'); } catch (e) { return []; } }
 
   // ---------- abas inferiores ----------
@@ -393,8 +410,8 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     } else if (a === 'pedidos') {
       const l = meus();
       pg.innerHTML = `<div class="ap-ph"><h3>Meus pedidos</h3></div><div class="sc">${l.length ? l.map((p, k) => `<div class="ap-ped"><div class="h"><b>PEDIDO #${esc(p.c)}</b><span>${new Date(p.d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })} · ${new Date(p.d).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span></div>
-        ${p.itens ? `<ul>${p.itens.map(i => `<li>${i.qtd}× ${esc(i.nome)}</li>`).join('')}</ul><div class="h"><span>${p.modo === 'retirada' ? '🏪 Retirada' : '🛵 Entrega'}</span><b class="v">${brl(p.total || 0)}</b></div>` : '<ul><li>Pedido feito pelo site</li></ul>'}
-        <div class="bs">${p.t ? `<a class="pri" href="#pedido/${esc(p.t)}">Acompanhar</a>` : `<a href="https://wa.me/${LOJA.whats}?text=${encodeURIComponent('Olá! Quero saber do meu pedido #' + p.c)}" target="_blank" rel="noopener">Falar com a loja</a>`}${p.itens ? `<button class="pri" onclick="APP_.repetir(${k})">Pedir de novo</button>` : ''}</div></div>`).join('') : `<div class="ap-vz"><big>🧾</big><b>Nenhum pedido ainda</b><br>Seus pedidos aparecem aqui depois que você finalizar.</div>`}</div>`;
+        ${p.itens ? `<ul>${p.itens.map(i => `<li>${i.qtd}× ${esc(i.nome)}</li>`).join('')}</ul><div class="h"><span>${p.modo === 'retirada' ? ICO.loja + 'Retirada' : ICO.moto + 'Entrega'}</span><b class="v">${brl(p.total || 0)}</b></div>` : '<ul><li>Pedido feito pelo site</li></ul>'}
+        <div class="bs">${p.t ? `<a class="pri" href="#pedido/${esc(p.t)}">Acompanhar</a>` : `<a href="https://wa.me/${LOJA.whats}?text=${encodeURIComponent('Olá! Quero saber do meu pedido #' + p.c)}" target="_blank" rel="noopener">Falar com a loja</a>`}${p.itens ? `<button class="pri" onclick="APP_.repetir(${k})">Pedir de novo</button>` : ''}</div></div>`).join('') : `<div class="ap-vz"><big>${ICO.recibo}</big><b>Nenhum pedido ainda</b><br>Seus pedidos aparecem aqui depois que você finalizar.</div>`}</div>`;
       pg.classList.add('on');
     }
   }
@@ -405,7 +422,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     const sb = k ? BASES.filter(b => n(b.nome).includes(k)) : [];
     E('apRes').innerHTML = (sb.length ? `<div class="ap-gt">Montar com o sabor</div><div class="ap-grid">${sb.map(b => `<button class="ap-t" onclick="APP_.aba('inicio');APP_.montar('${b.id}')"><img src="img/sab/${b.id}.jpg" alt=""><span class="nm"><b>${esc(curto(b.nome))}</b><small>MONTAR →</small></span></button>`).join('')}</div>` : '') +
       (pr.length ? `<div class="ap-gt">${k ? 'Taças e copos' : 'Todo o cardápio'}</div><div class="ap-list">${pr.map(([p, i]) => linhaProduto(p, i).replace('ap-it ap-rv', 'ap-it')).join('')}</div>` : '') +
-      (!pr.length && !sb.length ? `<div class="ap-vz"><big>🔎</big>Não achamos “${esc(q)}”.<br>Que tal <a href="#" onclick="APP_.aba('inicio');APP_.montar();return false" style="color:#a8d672;font-weight:700">montar do seu jeito</a>?</div>` : '');
+      (!pr.length && !sb.length ? `<div class="ap-vz"><big>${ICO.lupa}</big>Não achamos “${esc(q)}”.<br>Que tal <a href="#" onclick="APP_.aba('inicio');APP_.montar();return false" style="color:#a8d672;font-weight:700">montar do seu jeito</a>?</div>` : '');
   }
   function repetir(k) { const p = meus()[k]; if (!p || !p.itens) return; p.itens.forEach(i => sacola.push({ ...i })); atualiza(); aba('inicio'); setTimeout(abrir, 200); }
 
@@ -452,7 +469,7 @@ ${cats.map(c => `<section class="ap-sec" id="ap-s-${slug(c)}"><div class="ap-h a
     svw.className = 'ap-sv on' + (sl.v ? ' video' : '');
     svw.innerHTML = `<div class="bars">${st.sl.map((_, x) => `<i><b style="width:${x < j ? 100 : 0}%"></b></i>`).join('')}</div>
 <div class="hd"><img src="img/logo.png" alt=""><span>acaideira <small>· ${esc(st.nome)}</small></span><button class="svx" aria-label="Fechar">×</button></div>
-${md}<button class="som" aria-label="Som">🔇</button>
+${md}<button class="som" aria-label="Som">${ICO.mudo}</button>
 <div class="tx" style="color:${cor};${sl.sab ? 'text-shadow:none' : ''}"><h4 style="color:${cor}">${esc(tt)}</h4><p>${esc(dd || '')}</p></div>
 <div class="zn e"></div><div class="zn d"></div>${sl.cta ? `<button class="cta">${esc(sl.cta[0])}</button>` : ''}`;
     svw.querySelector('.svx').onclick = () => desempilha();
@@ -468,7 +485,7 @@ ${md}<button class="som" aria-label="Som">🔇</button>
     };
     S.raf = requestAnimationFrame(tick);
     S.pausa = on => { if (on) { pausadoEm = performance.now(); vid && vid.pause(); } else { if (pausadoEm) pausa += performance.now() - pausadoEm; pausadoEm = 0; vid && vid.play().catch(() => { }); } };
-    if (vid) { vid.play().catch(() => { }); const sb = svw.querySelector('.som'); sb.onclick = e => { e.stopPropagation(); vid.muted = !vid.muted; sb.textContent = vid.muted ? '🔇' : '🔊'; }; }
+    if (vid) { vid.play().catch(() => { }); const sb = svw.querySelector('.som'); sb.onclick = e => { e.stopPropagation(); vid.muted = !vid.muted; sb.innerHTML = vid.muted ? ICO.mudo : ICO.som; }; }
     let segurou = false, tm;
     svw.querySelectorAll('.zn').forEach(z => {
       z.onpointerdown = () => { segurou = false; tm = setTimeout(() => { segurou = true; S && S.pausa(true); }, 220); };
@@ -483,7 +500,7 @@ ${md}<button class="som" aria-label="Som">🔇</button>
 
   function compartilha() {
     const d = { title: 'Açaideira Sorvete & Açaí', text: 'Monte seu açaí na Açaideira 💜', url: location.href.split('#')[0] };
-    if (navigator.share) navigator.share(d).catch(() => { }); else (navigator.clipboard ? navigator.clipboard.writeText(d.url) : Promise.reject()).then(() => toast('Link copiado ✅'), () => toast(d.url));
+    if (navigator.share) navigator.share(d).catch(() => { }); else (navigator.clipboard ? navigator.clipboard.writeText(d.url) : Promise.reject()).then(() => toast('Link copiado'), () => toast(d.url));
   }
 
   window.APP_ = { produto, montar, volta: desempilha, aba, qtd: qtdItem, repetir, compartilha, busca, vaiPara, story: k => story(k || 1) };
